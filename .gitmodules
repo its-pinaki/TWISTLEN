@@ -1,0 +1,6 @@
+[submodule "twistlendesktop/shared-library"]
+	path = twistlendesktop/shared-library
+	url = https://github.com/its-pinaki/shared-components-library
+[submodule "twistlenmob/shared-library"]
+	path = twistlenmob/shared-library
+	url = https://github.com/its-pinaki/shared-components-library
