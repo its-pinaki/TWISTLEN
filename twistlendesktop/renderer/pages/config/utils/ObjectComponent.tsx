@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { componentConfig } from "../../shared-library/shared-library/libs/componentConfig";
+import { componentConfig } from "pages/shared-components-library/shared-library/libs/componentConfig";
 
 const ObjectComponent = ({ object, onUpdate, onDelete }) => {
   const [properties, setProperties] = useState(object.properties || {});

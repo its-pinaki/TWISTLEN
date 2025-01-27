@@ -7,3 +7,6 @@
 [submodule "twistlenweb/shared-components-library"]
 	path = twistlenweb/shared-components-library
 	url = https://github.com/its-pinaki/shared-components-library.git
+[submodule "twistlendesktop/renderer/pages/shared-components-library"]
+	path = twistlendesktop/renderer/pages/shared-components-library
+	url = https://github.com/its-pinaki/shared-components-library.git

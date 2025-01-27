@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ObjectComponent from "./ObjectComponent";
-import { componentMapping } from "../../shared-library/shared-library/libs/componentConfig";
+import { componentMapping } from "pages/shared-components-library/shared-library/libs/componentConfig";
 import Draggable from "react-draggable";
 
 const PageEditor = ({ page, onUpdate, onClose }) => {

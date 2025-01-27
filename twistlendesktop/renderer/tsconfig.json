@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",  // This sets the base directory to your project root.
+    "paths": {
+      "shared-library/*": ["shared-library/*"]
+    },
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,7 +25,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "../shared-library/shared-library/libs/componentConfig.tsx"  ],
+  ],
   "exclude": [
     "node_modules"
   ]
