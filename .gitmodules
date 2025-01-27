@@ -4,3 +4,6 @@
 [submodule "twistlenmob/shared-library"]
 	path = twistlenmob/shared-library
 	url = https://github.com/its-pinaki/shared-components-library
+[submodule "twistlenweb/shared-components-library"]
+	path = twistlenweb/shared-components-library
+	url = https://github.com/its-pinaki/shared-components-library.git
