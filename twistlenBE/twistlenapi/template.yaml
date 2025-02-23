@@ -1,0 +1,290 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  twistlenbackendsam
+
+  Sample SAM Template for twistlenbackend
+
+Globals:
+  Function:
+    Timeout: 3
+    Tracing: Active
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+    # Cors:
+    #     AllowMethods: "GET,POST,PUT,DELETE"
+    #     AllowHeaders: "content-type"
+    #     AllowOrigin: "*"
+  
+  HttpApi:
+    CorsConfiguration:
+      AllowCredentials: false
+      AllowHeaders:
+        - Content-Type
+        - X-Amz-Date
+        - Authorization
+        - X-Api-Key
+        - X-Amz-Security-Token
+        - X-Amz-User-Agent
+        - X-Amzn-Trace-Id
+      AllowMethods:
+        - OPTIONS
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      AllowOrigins:
+        - "*"
+Resources:
+  # ------------------------------
+  # DynamoDB Table
+  # ------------------------------
+  TwistlenTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: TwistlenItems
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Users
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Table to store the shared link details
+  LinksTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Links
+      AttributeDefinitions:
+        - AttributeName: shortCode
+          AttributeType: S
+      KeySchema:
+        - AttributeName: shortCode
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Table to store detailed visit logs (optional)
+  LinkVisitsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: LinkVisits
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  CommentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Comments
+      AttributeDefinitions:
+        - AttributeName: commentId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: commentId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+
+  # Lambda Function(PageFunction)
+  PageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: pageHandler/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: TwistlenItems  # Allow CRUD operations on the table
+      Events:
+        GetPage:
+          Type: Api
+          Properties:
+            Path: /pages
+            Method: get
+        PostPage:
+          Type: Api
+          Properties:
+            Path: /pages
+            Method: post
+        PutPage:   
+          Type: Api
+          Properties:
+            Path: /pages
+            Method: put
+        OptionsPage:
+          Type: Api
+          Properties:
+            Path: /pages
+            Method: OPTIONS
+        DeletePage: 
+          Type: Api
+          Properties:
+            Path: /pages
+            Method: delete
+  # Lambda Function(AuthFunction)
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: authHandler/
+      Handler: app.lambda_handler  
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: Users
+      Events:
+        UsersAPI:  # ✅ General Users CRUD API
+          Type: Api
+          Properties:
+            Path: /users
+            Method: ANY
+  
+        GetUser:  # ✅ Fetch user by ID
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: get
+  
+        CreateUser:  # ✅ Create a new user
+          Type: Api
+          Properties:
+            Path: /users
+            Method: post
+  
+        UpdateUser:  # ✅ Update user details
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: put
+  
+        DeleteUser:  # ✅ Delete user
+          Type: Api
+          Properties:
+            Path: /users/{id}
+            Method: delete
+  
+        Register:
+          Type: Api
+          Properties:
+            Path: /register
+            Method: post
+  
+        Login:
+          Type: Api
+          Properties:
+            Path: /login
+            Method: post
+  
+        Verify:
+          Type: Api
+          Properties:
+            Path: /verify
+            Method: get
+  
+        ForgotPassword:
+          Type: Api
+          Properties:
+            Path: /forgot-password
+            Method: post
+  
+        ChangePassword:
+          Type: Api
+          Properties:
+            Path: /change-password
+            Method: post
+
+        RefreshToken:
+          Type: Api
+          Properties:
+            Path: /refresh-token
+            Method: post
+ 
+  # ------------------------------
+  # New Lambda Function for Link Sharing & Tracking
+  # ------------------------------
+  LinkSharingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: linkHandler/
+      Handler: app.lambda_handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          LINKS_TABLE: !Ref LinksTable
+          VISITS_TABLE: !Ref LinkVisitsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LinksTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LinkVisitsTable
+      Events:
+        CreateLink:
+          Type: Api
+          Properties:
+            Path: /create-link
+            Method: post
+        RedirectLink:
+          Type: Api
+          Properties:
+            Path: /{shortCode}
+            Method: get
+
+  DiscussionHubFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: commentHandler/
+      Handler: app.lambda_handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          COMMENTS_TABLE: !Ref CommentsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CommentsTable
+      Events:
+        CreateComment:
+          Type: Api
+          Properties:
+            Path: /comments
+            Method: post
+        GetComments:
+          Type: Api
+          Properties:
+            Path: /comments
+            Method: get
+        UpdateComment:
+          Type: Api
+          Properties:
+            Path: /comments/{commentId}
+            Method: put
+        DeleteComment:
+          Type: Api
+          Properties:
+            Path: /comments/{commentId}
+            Method: delete

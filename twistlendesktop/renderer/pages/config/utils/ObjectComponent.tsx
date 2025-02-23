@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { componentConfig } from "pages/shared-components-library/shared-library/libs/componentConfig";
 
 const ObjectComponent = ({ object, onUpdate, onDelete }) => {
