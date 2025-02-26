@@ -1,0 +1,17 @@
+// import { GestureResponderEvent, Platform } from "react-native";
+
+interface ButtonProps {
+  label: string;
+  onPress: (event) => void;
+}
+let Button: React.FC<ButtonProps>;
+
+// if (Platform.OS === "web") {
+//   Button = require("./Button.web").default;
+// } else {
+//   Button = require("./Button.native").default;
+// }
+
+Button = require("./Button.web").default;
+
+export default Button;

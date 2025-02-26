@@ -4,7 +4,7 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import Admin from "../pages/config/utils/Admin";
+import Admin from "../config/utils/Admin"
 
 export default function HomePage() {
   const [message, setMessage] = React.useState("No message found");
@@ -14,6 +14,12 @@ export default function HomePage() {
       setMessage(message);
     });
   }, []);
+
+  const isRunningInNextron = () => {
+    return typeof navigator !== "undefined" && navigator.userAgent.includes("Electron");
+  };
+  console.log("isRunningInNextron", isRunningInNextron());
+  
 
   return (
     <React.Fragment>

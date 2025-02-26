@@ -4,7 +4,6 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-
         headerStyle: {
           backgroundColor: "#f4511e",
         },
@@ -14,7 +13,8 @@ export default function RootLayout() {
         },
       }}
     >
-      <Stack.Screen name="(header)" />
+      <Stack.Screen name="index"  />
+      <Stack.Screen name="details" />
     </Stack>
   );
 }
