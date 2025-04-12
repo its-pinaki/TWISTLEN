@@ -1,11 +1,11 @@
-import { Link } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
 
-export default function TabTwoScreen() {
+export default function DetailsScreen() {
   return (
     <View style={styles.container}>
-      <Text>TabTwoScreen</Text>
-      <Link href="/index">Go To Index</Link>
+      <Text>Details</Text>
+      <Link href="/(tabs)/layout">Go details</Link>
     </View>
   );
 }

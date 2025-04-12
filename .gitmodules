@@ -10,3 +10,6 @@
 [submodule "twistlendesktop/renderer/pages/shared-components-library"]
 	path = twistlendesktop/renderer/pages/shared-components-library
 	url = https://github.com/its-pinaki/shared-components-library.git
+[submodule "twistlendesktop/shared-components-library"]
+	path = twistlendesktop/shared-components-library
+	url = https://github.com/its-pinaki/shared-components-library.git
