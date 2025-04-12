@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React from "react";
 import Typography from "../../atoms/Typography/Typography";
 import IconBlock from "../../atoms/IconBlock/IconBlock";
@@ -19,7 +19,12 @@ const ProductContainer = () => {
       }}
     >
       <View style={{ borderRadius: 8, backgroundColor: "white" }}>
-        <CustomImage source={"https://picsum.photos/200"} variant="right">
+        <CustomImage
+          source={{ uri: "https://picsum.photos/300/200" }}
+          width={"100%"}
+          height={180}
+          shape="rectangle"
+        >
           <View>
             <Typography
               text="Ghost Town Series"

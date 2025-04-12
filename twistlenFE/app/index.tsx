@@ -1,3 +1,4 @@
+import '../global.css';
 import { usePageStore } from "@/stores/pageStores";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
@@ -6,7 +7,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
 import Admin from "@/adminconfig/Admin";
 
+
 export default function HomeScreen() {
+
   return (
     <View style={styles.container}>
       <Text>Hi This is Home</Text>

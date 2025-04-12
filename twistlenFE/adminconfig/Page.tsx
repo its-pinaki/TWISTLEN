@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import ObjectComponent from "./ObjectComponent";
-import { componentMapping} from "../components/libs/componentConfig"
+import { componentMapping } from "../components/libs/componentConfig";
 import Draggable from "react-draggable";
 import axios from "axios";
 import rootUrl from "./constants";
 import usePageStore from "./Stores/PageStores";
 
 const PageEditor = ({ page, onUpdate, onClose }) => {
-  const { setIsLoading, isLoading, setPages, pages } = usePageStore();
+  const { setIsLoading, isLoading } = usePageStore();
   const [objects, setObjects] = useState(page.objects || []);
   const [expandedComponentId, setExpandedComponentId] = useState(null);
 
@@ -38,18 +38,11 @@ const PageEditor = ({ page, onUpdate, onClose }) => {
   };
 
   const handleDrag = (id, e, data) => {
-    const updatedObjects = objects.map((obj) =>
-      obj.id === id ? { ...obj, position: { x: data.x, y: data.y } } : obj
+    setObjects(
+      objects.map((obj) =>
+        obj.id === id ? { ...obj, position: { x: data.x, y: data.y } } : obj
+      )
     );
-
-    const sortedObjects = [...updatedObjects].sort((a, b) => {
-      if (a.position.y === b.position.y) {
-        return a.position.x - b.position.x;
-      }
-      return a.position.y - b.position.y;
-    });
-
-    setObjects(sortedObjects);
   };
 
   const toggleExpand = (id) => {
@@ -63,7 +56,7 @@ const PageEditor = ({ page, onUpdate, onClose }) => {
         `${rootUrl}/Prod/pages`,
         {
           id: page.id,
-          objects: objects,
+          objects,
           name: page.name,
         },
         {
@@ -74,148 +67,150 @@ const PageEditor = ({ page, onUpdate, onClose }) => {
         }
       );
       onClose();
-      setIsLoading({ type: "pageUpdate", status: false, id: page.id });
     } catch (error) {
-      console.error("Error fetching pages:", error);
-      setIsLoading({ type: "pageUpdate", status: false, id: page.id });
+      console.error("Error saving page:", error);
     }
+    setIsLoading({ type: "pageUpdate", status: false, id: page.id });
   };
 
   return (
     <View style={{ flex: 1, flexDirection: "row", width: "100%" }}>
       {/* Left Panel: Object Controls */}
-      <ScrollView style={{ flex: 1, padding: 10 }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-          Editing Page {page.name}
-        </Text>
+      <View style={{ flex: 1, padding: 10 }}>
+        <ScrollView style={{ flexGrow: 1 }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+            Editing Page {page.name}
+          </Text>
 
-        {objects.length === 0 ? (
-          <Text>No objects yet.</Text>
-        ) : (
-          objects?.map((obj) => (
-            <View key={obj.id} style={{ marginBottom: 10 }}>
-              {/* Expandable Component Type Section */}
-              <TouchableOpacity
-                onPress={() => toggleExpand(obj.id)}
-                style={{
-                  backgroundColor:
-                    expandedComponentId === obj.id ? "#d3d3d3" : "#e0e0e0",
-                  padding: 10,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text>Component Type: {obj.type}</Text>
-                <Text
+          {objects.length === 0 ? (
+            <Text>No objects yet.</Text>
+          ) : (
+            objects.map((obj) => (
+              <View key={obj.id} style={{ marginBottom: 10 }}>
+                <TouchableOpacity
+                  onPress={() => toggleExpand(obj.id)}
                   style={{
-                    transform: [
-                      {
-                        rotate:
-                          expandedComponentId === obj.id ? "180deg" : "0deg",
-                      },
-                    ],
+                    backgroundColor:
+                      expandedComponentId === obj.id ? "#d3d3d3" : "#e0e0e0",
+                    padding: 10,
+                    borderRadius: 5,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  ⬆️
-                </Text>
-              </TouchableOpacity>
+                  <Text>Component Type: {obj.type}</Text>
+                  <Text
+                    style={{
+                      transform: [
+                        {
+                          rotate:
+                            expandedComponentId === obj.id ? "180deg" : "0deg",
+                        },
+                      ],
+                    }}
+                  >
+                    ⬆️
+                  </Text>
+                </TouchableOpacity>
 
-              {expandedComponentId === obj.id && (
-                <ScrollView
-                  style={{ maxHeight: 300 }} // Adjust height as needed
-                  contentContainerStyle={{ flexGrow: 1 }}
-                  nestedScrollEnabled={true} // Allows inner scrolling
-                >
-                  <ObjectComponent
-                    object={obj}
-                    onUpdate={updateObject}
-                    onDelete={deleteObject}
-                  />
-                </ScrollView>
-              )}
-            </View>
-          ))
-        )}
+                {expandedComponentId === obj.id && (
+                  <ScrollView
+                    style={{ maxHeight: 300 }}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    nestedScrollEnabled
+                  >
+                    <ObjectComponent
+                      object={obj}
+                      onUpdate={updateObject}
+                      onDelete={deleteObject}
+                    />
+                  </ScrollView>
+                )}
+              </View>
+            ))
+          )}
 
-        {/* Action Buttons */}
-        <TouchableOpacity
-          onPress={addObject}
-          style={{
-            backgroundColor: "#f0ad4e",
-            padding: 10,
-            marginVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>
-            Add Object
-          </Text>
-        </TouchableOpacity>
+          {/* Action Buttons */}
+          <TouchableOpacity
+            onPress={addObject}
+            style={{
+              backgroundColor: "#f0ad4e",
+              padding: 10,
+              marginVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ color: "white", textAlign: "center" }}>
+              Add Object
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={onClose}
-          style={{
-            backgroundColor: "#5bc0de",
-            padding: 10,
-            marginVertical: 5,
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>Back</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onClose}
+            style={{
+              backgroundColor: "#5bc0de",
+              padding: 10,
+              marginVertical: 5,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ color: "white", textAlign: "center" }}>Back</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={onSave}
-          style={{
-            backgroundColor:
-              isLoading?.status && isLoading?.type === "pageUpdate"
-                ? "#aaa"
-                : "#5cb85c",
-            padding: 10,
-            marginVertical: 5,
-            borderRadius: 5,
-          }}
-          disabled={isLoading?.status && isLoading?.type === "pageUpdate"}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>
-            {isLoading?.status && isLoading?.type === "pageUpdate"
-              ? "Saving..."
-              : "Save"}
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <TouchableOpacity
+            onPress={onSave}
+            style={{
+              backgroundColor:
+                isLoading?.status && isLoading?.type === "pageUpdate"
+                  ? "#aaa"
+                  : "#5cb85c",
+              padding: 10,
+              marginVertical: 5,
+              borderRadius: 5,
+            }}
+            disabled={isLoading?.status && isLoading?.type === "pageUpdate"}
+          >
+            <Text style={{ color: "white", textAlign: "center" }}>
+              {isLoading?.status && isLoading?.type === "pageUpdate"
+                ? "Saving..."
+                : "Save"}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
 
       {/* Right Panel: Live Preview */}
-      <ScrollView
+      <View
         style={{
-          flex: 1,
+          flex: 2, // Takes more space for editing
           padding: 10,
           borderWidth: 1,
           borderColor: "#ddd",
-          minHeight: 300,
           position: "relative",
-          width: "100%",
         }}
       >
-        <Text>Live Preview (Drag & Move Objects)</Text>
+        <ScrollView>
+          <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10 }}>
+            Live Preview (Drag & Move Objects)
+          </Text>
 
-        {objects.map((obj) => {
-          const Component = componentMapping[obj.type];
-          return Component ? (
-            <Draggable
-              key={obj.id}
-              defaultPosition={{ x: obj.position.x, y: obj.position.y }}
-              onDrag={(e, data) => handleDrag(obj.id, e, data)}
-            >
-              <View style={{ position: "absolute" }}>
-                <Component {...obj.properties} />
-              </View>
-            </Draggable>
-          ) : null;
-        })}
-      </ScrollView>
+          {objects.map((obj) => {
+            const Component = componentMapping[obj.type];
+            return Component ? (
+              <Draggable
+                key={obj.id}
+                defaultPosition={{ x: obj.position.x, y: obj.position.y }}
+                onDrag={(e, data) => handleDrag(obj.id, e, data)}
+              >
+                <View style={{ position: "absolute" }}>
+                  <Component {...obj.properties} />
+                </View>
+              </Draggable>
+            ) : null;
+          })}
+        </ScrollView>
+      </View>
     </View>
   );
 };

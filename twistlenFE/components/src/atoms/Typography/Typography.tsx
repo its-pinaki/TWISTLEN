@@ -1,6 +1,7 @@
 // Typography Component
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TextStyle, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
 
 type TypographyProps = {
   text: string;
@@ -8,7 +9,9 @@ type TypographyProps = {
   fontSize?: number;
   fontWeight?: 'normal' | 'bold';
   textAlign?: 'left' | 'center' | 'right';
-  style?: object;
+  href?: string; // New prop for links
+  style?: TextStyle;
+  onPress?: () => void; // Function to call on press
 };
 
 const Typography: React.FC<TypographyProps> = ({
@@ -17,13 +20,32 @@ const Typography: React.FC<TypographyProps> = ({
   fontSize = 16,
   fontWeight = 'normal',
   textAlign = 'left',
+  href,
   style = {},
+  onPress,
 }) => {
-  return <Text style={[styles.text, { color, fontSize, fontWeight, textAlign }, style]}>{text}</Text>;
+  if (href) {
+    return (
+      <Link href={href} style={[styles.link, { fontSize, fontWeight, textAlign }, style]}>
+        {text}
+      </Link>
+    );
+  }
+
+  return (
+    <TouchableOpacity onPress={onPress} disabled={!onPress}>
+      <Text style={[styles.text, { color, fontSize, fontWeight, textAlign }, style]}>{text}</Text>
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
   text: {
+    marginVertical: 4,
+  },
+  link: {
+    color: 'black',
+    textDecorationLine: 'underline',
     marginVertical: 4,
   },
 });

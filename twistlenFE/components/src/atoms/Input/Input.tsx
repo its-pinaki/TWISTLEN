@@ -7,9 +7,10 @@ const { width } = Dimensions.get('window');
 const getResponsiveStyles = (screenWidth) => {
   return {
     container: {
-      marginVertical: screenWidth < 480 ? 6 : 10,
+      // marginVertical: screenWidth < 480 ? 6 : 10,
+      marginVertical: 5,
       width: screenWidth < 480 ? '100%' : '80%',
-      alignSelf: 'center',
+      // alignSelf: 'center',
     },
     input: {
       backgroundColor: 'white',
@@ -37,7 +38,7 @@ const Input = ({
   disabled = false,
   multiline = false,
   numberOfLines = 1,
-  style = {},
+  style = {width:"100%"},
   inputStyle = {},
   helperText = '',
   helperTextColor = 'gray',

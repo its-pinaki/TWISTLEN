@@ -31,7 +31,7 @@ export default function AuthScreen() {
   
   return (
     <View style={styles.container}>
-      <Text>Hi This is AuthScreen</Text>
+      {/* <Text>Hi This is AuthScreen</Text> */}
       {pages
         ?.find((page) => page.name === "Home")
         ?.objects?.map((obj) => {

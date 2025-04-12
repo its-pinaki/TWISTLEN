@@ -1,1 +1,0 @@
-export const rootUrl = 'https://uidwckb9q8.execute-api.ap-south-1.amazonaws.com';

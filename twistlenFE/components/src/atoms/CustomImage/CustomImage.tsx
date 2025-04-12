@@ -1,47 +1,41 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
-
-// Variants
-// "right" - Image in circle, component aligned to right
-// "bottom" - Image in rectangle, component aligned below
-// "above" - Image and component positioned above image
+import { View, Image, StyleSheet, ImageSourcePropType } from "react-native";
 
 type CustomImageProps = {
-  source: any;
-  size?: number; // Ensures circular shape for "right" variant
+  source: ImageSourcePropType;
+  width?: number | string;
+  height?: number | string;
   borderWidth?: number;
   borderColor?: string;
-  variant?: "right" | "bottom" | "above";
+  shape?: "circle" | "rectangle";
+  overlayComponent?: React.ReactNode;
   children?: React.ReactNode;
   style?: object;
 };
 
 const CustomImage: React.FC<CustomImageProps> = ({
   source,
-  size = 80,
-  borderWidth = 2,
+  width = 100,
+  height = 100,
+  borderWidth = 0,
   borderColor = "#000",
-  variant = "right",
+  shape = "rectangle",
+  overlayComponent,
   children,
   style = {},
 }) => {
+  const isCircle = shape === "circle";
+  const borderRadius = isCircle ? Number(width) / 2 : 10;
+
   return (
-    <View
-      style={[
-        styles.container,
-        variant === "right" && styles.row,
-        variant === "bottom" && styles.column,
-        variant === "above" && styles.relative,
-      ]}
-    >
-      {variant === "above" && children}
+    <View style={[styles.container, { width, height }]}>
       <View
         style={[
           styles.imageContainer,
           {
-            width: size,
-            height: variant === "bottom" ? size * 1.2 : size, // Make it rectangular for bottom variant
-            borderRadius: variant === "right" ? size / 2 : 10,
+            width,
+            height,
+            borderRadius,
             borderWidth,
             borderColor,
           },
@@ -52,45 +46,44 @@ const CustomImage: React.FC<CustomImageProps> = ({
           style={[
             styles.image,
             {
-              width: size - borderWidth * 2,
-              height:
-                variant === "bottom"
-                  ? size * 1.2 - borderWidth * 2
-                  : size - borderWidth * 2,
-              borderRadius:
-                variant === "right" ? (size - borderWidth * 2) / 2 : 10,
+              width: "100%",
+              height: "100%",
+              borderRadius,
             },
             style,
           ]}
+          resizeMode="cover" // Or 'contain' if you prefer no cropping
         />
+
+        {overlayComponent && <View style={styles.overlay}>{overlayComponent}</View>}
       </View>
-      {(variant === "right" || variant === "bottom") && children}
+      {children}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    width: "100%",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  column: {
-    flexDirection: "column",
-  },
-  relative: {
-    position: "relative",
-    alignItems: "center",
+    overflow: "hidden",
   },
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
     overflow: "hidden",
   },
   image: {
-    resizeMode: "cover",
+    resizeMode: "cover", // Keep aspect ratio but fill container, can crop
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
 });
 

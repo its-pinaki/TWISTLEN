@@ -37,6 +37,7 @@ const IconBlock: React.FC<IconBlockProps> = ({ icon }) => {
             borderRadius: 10,
             borderWidth: icon.noBorder ? 0 : 1,
             borderColor: icon.noBorder ? "transparent" : "#DFE6E9",
+            padding: icon.noBorder ? 0 : 10,
             justifyContent: "center",
             alignItems: "center",
             ...(icon.label ? {} : { width: icon?.width, height: icon?.height }),

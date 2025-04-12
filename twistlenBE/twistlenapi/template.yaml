@@ -38,6 +38,12 @@ Globals:
       AllowOrigins:
         - "*"
 Resources:
+
+  # S3 Bucket for storing additional data related to the tables
+  TwistlenS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: twistlen-storage-bucket
   # ------------------------------
   # DynamoDB Table
   # ------------------------------
@@ -113,9 +119,14 @@ Resources:
       Runtime: nodejs18.x
       Architectures:
         - x86_64
+      Environment:
+        Variables:
+          S3_BUCKET_NAME: !Ref TwistlenS3Bucket
       Policies:
         - DynamoDBCrudPolicy:
             TableName: TwistlenItems  # Allow CRUD operations on the table
+        - S3CrudPolicy:
+            BucketName: !Ref TwistlenS3Bucket
       Events:
         GetPage:
           Type: Api
@@ -151,9 +162,14 @@ Resources:
       Runtime: nodejs18.x
       Architectures:
         - x86_64
+      Environment:
+        Variables:
+          S3_BUCKET_NAME: !Ref TwistlenS3Bucket
       Policies:
         - DynamoDBCrudPolicy:
             TableName: Users
+        - S3CrudPolicy:
+            BucketName: !Ref TwistlenS3Bucket
       Events:
         UsersAPI:  # ✅ General Users CRUD API
           Type: Api
@@ -220,6 +236,18 @@ Resources:
           Properties:
             Path: /refresh-token
             Method: post
+
+        UpdateProfile:
+          Type: Api
+          Properties:
+            Path: /update-profile
+            Method: post
+
+        GetProfile:
+          Type: Api
+          Properties:
+            Path: /get-user-profile
+            Method: get
  
   # ------------------------------
   # New Lambda Function for Link Sharing & Tracking

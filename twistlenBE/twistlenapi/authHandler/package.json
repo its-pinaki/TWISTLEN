@@ -12,7 +12,10 @@
     "aws-sdk": "^2.1692.0",
     "bcryptjs": "^2.4.3",
     "crypto": "^1.0.1",
+    "formidable": "^3.5.2",
     "jsonwebtoken": "^9.0.2",
+    "mailtrap": "^4.0.0",
+    "stream": "^0.0.3",
     "uuid": "^11.0.5"
   }
 }
