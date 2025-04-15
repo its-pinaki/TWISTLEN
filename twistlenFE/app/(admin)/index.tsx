@@ -5,6 +5,8 @@ import axios from "axios";
 import { View, Text, StyleSheet } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
 import Admin from "@/adminconfig/Admin";
+import SidebarNavigation from "@/components/src/atoms/SideBarNavigation/SideBarNavigation";
+import ProductManager from "@/components/src/organisms/ProductManager/ProductManager";
 
 export default function AdminScreen() {
   const { setIsLoading, isLoading, setPages, pages } = usePageStore();
@@ -28,10 +30,26 @@ export default function AdminScreen() {
   }, []);
   console.log("pages", pages);
 
+  const tabs = [
+    {
+      name: "CRM MANAGER",
+      component: Admin,
+      iconService: "FontAwesome5",
+      iconName: "pager",
+    },
+    {
+      name: "PRODUCT MANAGER",
+      component: ProductManager,
+      iconService: "Entypo",
+      iconName: "shop",
+    },
+    // { name: "ORDER MANAGER", component: EquipmentManager },
+    // { name: "USER MANAGER", component: LocationManager },
+  ];
+
   return (
     <View style={styles.container}>
-      <Link href="/(header)">View details</Link>
-      <Admin />
+      <SidebarNavigation tabs={tabs} />
     </View>
   );
 }

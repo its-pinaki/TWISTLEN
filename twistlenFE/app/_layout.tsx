@@ -1,7 +1,15 @@
-import '../global.css';
+import { useEffect } from "react";
+import "../global.css";
 import { Stack } from "expo-router";
+import { Platform } from "react-native";
 
 export default function RootLayout() {
+  // useEffect(() => {
+  //   if (Platform.OS === "web") {
+  //     document.body.style.transform = "scale(0.9)";
+  //     document.body.style.transformOrigin = "top center";
+  //   }
+  // }, []);
   return (
     <Stack
       screenOptions={{

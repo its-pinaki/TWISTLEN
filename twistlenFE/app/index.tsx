@@ -3,12 +3,19 @@ import { usePageStore } from "@/stores/pageStores";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
 import Admin from "@/adminconfig/Admin";
 
 
 export default function HomeScreen() {
+
+  // useEffect(() => {
+  //   if (Platform.OS === 'web') {
+  //     document.body.style.transform = 'scale(0.2)';
+  //     document.body.style.transformOrigin = 'top center';
+  //   }
+  // }, []);
 
   return (
     <View style={styles.container}>

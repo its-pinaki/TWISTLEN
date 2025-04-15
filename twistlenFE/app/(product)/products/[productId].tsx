@@ -6,18 +6,13 @@ const ProductScreen = () => {
   const { productId, ref, refv1 } = useLocalSearchParams();
 
   return (
-    <View style={{ $$css: true, _: "w-full max-w-screen-xl mx-auto p-4" }}>
-      <ScrollView>
-        <View
-          style={{
-            $$css: true,
-            _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4",
-          }}
-        >
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+    <View style={{ $$css: true, _: "flex-1" }}>
+      <ScrollView contentContainerStyle={{ paddingVertical: 20 }}>
+        {/* Outer container with max-width */}
+        <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto px-4" }}>
+          <Text>{productId}</Text>
+          <Text>{ref}</Text>
+          <Text>{refv1}</Text>
         </View>
       </ScrollView>
     </View>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,22 +14,7 @@ import Button from "../../atoms/Button/Button";
 import IconBlock from "../../atoms/IconBlock/IconBlock";
 import Typography from "../../atoms/Typography/Typography";
 
-// Enable layout animation on Android
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
 const ProductCard = () => {
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded(!expanded);
-  };
-
   return (
     <View style={styles.card}>
       {/* Header Image with Overlay Text */}
@@ -48,7 +33,7 @@ const ProductCard = () => {
             borderRadius={50}
             textStyle={{
               fontSize: 14,
-              fontWeight: "regular",
+              fontWeight: "normal",
               fontFamily: "Inter",
             }}
           />
@@ -66,7 +51,7 @@ const ProductCard = () => {
           borderRadius={50}
           textStyle={{
             fontSize: 14,
-            fontWeight: "regular",
+            fontWeight: "normal",
             fontFamily: "Inter",
           }}
         />
@@ -80,7 +65,7 @@ const ProductCard = () => {
             noBorder: true,
             textStyle: {
               fontSize: 16,
-              fontWeight: "regular",
+              fontWeight: "normal",
               fontFamily: "Inter",
             },
           }}
@@ -130,67 +115,77 @@ const ProductCard = () => {
           color="#10B981"
         />
       </View>
-      {/* Collapsible Section */}
-      {expanded && (
-        <View style={styles.collapsibleContent}>
-          <IconBlock
-            icon={{
-              serviceType: "AntDesign",
-              iconName: "check",
-              size: 18,
-              color: "#10B981",
-              label: "Complete Offer Creation System",
-              style: { $$css: true, _: "my-1" },
-              noBorder: true,
-              textStyle: {
-                fontSize: 16,
-                fontWeight: "regular",
-                fontFamily: "Inter",
-              },
-            }}
-          />
-          <IconBlock
-            icon={{
-              serviceType: "AntDesign",
-              iconName: "check",
-              size: 18,
-              color: "#10B981",
-              label: "Value Stack Framework",
-              noBorder: true,
-              style: { $$css: true, _: "my-1" },
-              textStyle: {
-                fontSize: 16,
-                fontWeight: "regular",
-                fontFamily: "Inter",
-              },
-            }}
-          />
-          <IconBlock
-            icon={{
-              serviceType: "AntDesign",
-              iconName: "check",
-              size: 18,
-              color: "#10B981",
-              label: "Sales Script Templates",
-              noBorder: true,
-              style: { $$css: true, _: "my-1" },
-              textStyle: {
-                fontSize: 16,
-                fontWeight: "regular",
-                fontFamily: "Inter",
-              },
-            }}
-          />
-        </View>
-      )}
 
-      {/* Toggle Button */}
-      <TouchableOpacity onPress={toggleExpand} style={styles.toggleButton}>
-        <Text style={styles.toggleText}>
-          {expanded ? "Show Less" : "Show More"}
-        </Text>
-        <AntDesign name={expanded ? "up" : "down"} size={16} color="gray" />
-      </TouchableOpacity>
+      <View style={{ $$css: true, _: "px-2 mx-2" }}>
+        <IconBlock
+          icon={{
+            serviceType: "AntDesign",
+            iconName: "check",
+            size: 18,
+            color: "#10B981",
+            label: "Complete Offer Creation System",
+            style: { $$css: true, _: "my-1" },
+            noBorder: true,
+            textStyle: {
+              fontSize: 16,
+              fontWeight: "normal",
+              fontFamily: "Inter",
+            },
+          }}
+        />
+        <IconBlock
+          icon={{
+            serviceType: "AntDesign",
+            iconName: "check",
+            size: 18,
+            color: "#10B981",
+            label: "Value Stack Framework",
+            noBorder: true,
+            style: { $$css: true, _: "my-1" },
+            textStyle: {
+              fontSize: 16,
+              fontWeight: "normal",
+              fontFamily: "Inter",
+            },
+          }}
+        />
+        <IconBlock
+          icon={{
+            serviceType: "AntDesign",
+            iconName: "check",
+            size: 18,
+            color: "#10B981",
+            label: "Sales Script Templates",
+            noBorder: true,
+            style: { $$css: true, _: "my-1" },
+            textStyle: {
+              fontSize: 16,
+              fontWeight: "normal",
+              fontFamily: "Inter",
+            },
+          }}
+        />
+      </View>
+      <View style={{ $$css: true, _: "px-2 mx-2" }}>
+      <Button
+        title={"See Details"}
+        buttonColor="#2563EB"
+        textColor="#FFFFFF"
+        verticalPadding={12}
+        horizontalPadding={0}
+        verticalMargin={10}
+        horizontalMargin={10}
+        borderRadius={8}
+        textStyle={{
+          fontSize: 16,
+          fontWeight: "normal",
+          fontFamily: "Inter",
+        }}
+        onPress={() => {}}
+        style={{width:"100%"}}
+      />
+      </View>
+      
     </View>
   );
 };
@@ -235,10 +230,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: "#777",
-  },
-  collapsibleContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 12,
   },
   detailText: {
     fontSize: 14,

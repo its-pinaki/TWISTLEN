@@ -9,12 +9,14 @@ type IconItem = {
   color: string;
   noBorder?: boolean;
   label?: string;
+  labelComponent?: React.ReactNode; // New
   style?: object;
   textStyle?: object;
   marginHorizontal?: number;
   marginVertical?: number;
-  width?:number,
-  height?:number
+  width?: number;
+  height?: number;
+  reverseLabel?: boolean;
 };
 
 type IconBlockProps = {
@@ -29,8 +31,36 @@ const IconBlock: React.FC<IconBlockProps> = ({ icon }) => {
     return null;
   }
 
+  const Label = icon.labelComponent ? (
+    icon.labelComponent
+  ) : icon.label ? (
+    <Text
+      style={[
+        {
+          fontSize: icon.size,
+          fontWeight: "bold",
+          marginHorizontal: 5,
+        },
+        icon.textStyle,
+      ]}
+    >
+      {icon.label}
+    </Text>
+  ) : null;
+
   return (
-    <View style={[{ flexDirection: "row", alignItems: "center", marginHorizontal: icon.marginHorizontal, marginVertical: icon.marginVertical }, icon.style]}>
+    <View
+      style={[
+        {
+          flexDirection: "row",
+          alignItems: "center",
+          marginHorizontal: icon.marginHorizontal,
+          marginVertical: icon.marginVertical,
+        },
+        icon.style,
+      ]}
+    >
+      {icon.reverseLabel && Label}
       <View
         style={[
           {
@@ -40,7 +70,9 @@ const IconBlock: React.FC<IconBlockProps> = ({ icon }) => {
             padding: icon.noBorder ? 0 : 10,
             justifyContent: "center",
             alignItems: "center",
-            ...(icon.label ? {} : { width: icon?.width, height: icon?.height }),
+            ...(icon.label || icon.labelComponent
+              ? {}
+              : { width: icon?.width, height: icon?.height }),
           },
           icon.style,
         ]}
@@ -51,20 +83,7 @@ const IconBlock: React.FC<IconBlockProps> = ({ icon }) => {
           color={icon.color}
         />
       </View>
-      {icon.label && (
-        <Text
-          style={[
-            {
-              fontSize: icon.size,
-              fontWeight: "bold",
-              marginHorizontal: 5,
-            },
-            icon.textStyle,
-          ]}
-        >
-          {icon.label}
-        </Text>
-      )}
+      {!icon.reverseLabel && Label}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Typography from "../../atoms/Typography/Typography";
 import Input from "../../atoms/Input/Input";
@@ -7,12 +7,12 @@ import CustomDropDown from "../../atoms/CustomDropDown/CustomDropDown";
 import GenericTable from "../../atoms/GenericTable/GenericTable";
 import CustomModal from "../../atoms/CustomModal/CustomModal";
 import Stepper from "../../atoms/Stepper/Stepper";
+import IconBlock from "../../atoms/IconBlock/IconBlock";
 
 const ProductManager = () => {
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const steps = ["BasicProductInfo", "PricingInfo", "ShippingInfo"];
-
 
   const basicProductInfo = () => {
     return (
@@ -219,6 +219,9 @@ const ProductManager = () => {
   const data = [
     { id: 1, name: "Alice", age: 25, email: "alice@example.com" },
     { id: 2, name: "Bob", age: 30, email: "bob@example.com" },
+    { id: 3, name: "Bob", age: 30, email: "bob@example.com" },
+    { id: 4, name: "Bob", age: 30, email: "bob@example.com" },
+    { id: 5, name: "Bob", age: 30, email: "bob@example.com" },
   ];
 
   return (
@@ -233,27 +236,204 @@ const ProductManager = () => {
           setIsAddProductOpen(false);
         }}
         modalContent={() => {
-          return <View>
-            <Stepper steps={steps} activeStep={activeStep} activeColor="#2ed573" inactiveColor="#dfe4ea" />
-          </View>;
+          return (
+            <View>
+              <Stepper
+                steps={steps}
+                activeStep={activeStep}
+                activeColor="#2ed573"
+                inactiveColor="#dfe4ea"
+              />
+            </View>
+          );
         }}
       />
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-evenly",
+          $$css: true,
+          _: "flex justify-between flex-col md:flex-row ",
         }}
       >
-        <Button
-          horizontalPadding={15}
-          verticalPadding={8}
-          title={"Add Product"}
-          onPress={() => {
-            setIsAddProductOpen(true);
-          }}
-          buttonColor="black"
+        <Typography
+          text={"Products"}
+          style={{ fontFamily: "Poppins", fontWeight: "bold", fontSize: 24 }}
         />
+        <View style={{ $$css: true, _: "flex justify-between flex-row" }}>
+          <Button
+            customContent={
+              <IconBlock
+                icon={{
+                  serviceType: "Feather",
+                  iconName: "upload",
+                  size: 16,
+                  color: "#000000",
+                  noBorder: true,
+                  label: "Bulk Upload",
+                  // reverseLabel: true,
+                  textStyle: {
+                    fontSize: 16,
+                    fontWeight: "normal",
+                    fontFamily: "Inter",
+                    color: "#4B5563",
+                  },
+                }}
+              />
+            }
+            buttonColor="#FFFFFF"
+            borderRadius={8}
+            borderColor="#D1D5DB"
+            mode={"outlined"}
+          />
+          <Button
+            customContent={
+              <IconBlock
+                icon={{
+                  serviceType: "FontAwesome6",
+                  iconName: "add",
+                  size: 16,
+                  color: "#FFFFFF",
+                  noBorder: true,
+                  label: "Add Product",
+                  // reverseLabel: true,
+                  textStyle: {
+                    fontSize: 16,
+                    fontWeight: "normal",
+                    fontFamily: "Inter",
+                    color: "#FFFFFF",
+                  },
+                }}
+              />
+            }
+            buttonColor="#2563EB"
+            borderRadius={8}
+            borderColor="#E5E7EB"
+            mode={"outlined"}
+            horizontalMargin={10}
+          />
+        </View>
+      </View>
+
+      <View
+        style={{
+          $$css: true,
+          _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5",
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            // alignItems: "center",
+            // justifyContent:"center",
+            backgroundColor: "#FFFFFF",
+            borderRadius: 12,
+            padding: 20,
+            // shadowColor: "#000",
+            // shadowOpacity: 0.05,
+            // shadowRadius: 4,
+            // elevation: 2,
+            borderWidth:0.1,
+            borderColor:"#E5E7EB"
+          }}
+        >
+          <IconBlock
+            icon={{
+              serviceType: "MaterialCommunityIcons",
+              iconName: "cube-outline",
+              size: 16,
+              color: "#2563EB", // Tailwind's blue-500
+              noBorder: true,
+              style: {
+                backgroundColor: "#DBEAFE",
+                borderRadius: 8,
+                paddingHorizontal:8
+              },
+
+            }}
+          />
+
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ color: "#6B7280", fontSize: 12 }}>
+              Total Products
+            </Text>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>2,431</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            // alignItems: "center",
+            // justifyContent:"center",
+            backgroundColor: "#FFFFFF",
+            borderRadius: 12,
+            padding: 20,
+            // shadowColor: "#000",
+            // shadowOpacity: 0.05,
+            // shadowRadius: 4,
+            // elevation: 2,
+            borderWidth:0.1,
+            borderColor:"#E5E7EB"
+          }}
+        >
+          <IconBlock
+            icon={{
+              serviceType: "AntDesign",
+              iconName: "check",
+              size: 16,
+              color: "#059669", // Tailwind's blue-500
+              noBorder: true,
+              style: {
+                backgroundColor: "#D1FAE5",
+                borderRadius: 8,
+                paddingHorizontal:8
+              },
+            }}
+          />
+
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ color: "#6B7280", fontSize: 12 }}>
+              Active Products
+            </Text>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>1,890</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            // alignItems: "center",
+            // justifyContent:"center",
+            backgroundColor: "#FFFFFF",
+            borderRadius: 12,
+            padding: 20,
+            // shadowColor: "#000",
+            // shadowOpacity: 0.05,
+            // shadowRadius: 4,
+            // elevation: 2,
+            borderWidth:0.1,
+            borderColor:"#E5E7EB"
+          }}
+        >
+          <IconBlock
+            icon={{
+              serviceType: "AntDesign",
+              iconName: "warning",
+              size: 16,
+              color: "#D97706", // Tailwind's blue-500
+              noBorder: true,
+              style: {
+                backgroundColor: "#FEF3C7",
+                borderRadius: 8,
+                paddingHorizontal:8
+              },
+            }}
+          />
+
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ color: "#6B7280", fontSize: 12 }}>
+              Total Products
+            </Text>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>2,431</Text>
+          </View>
+        </View>
       </View>
       <GenericTable
         columns={columns}
