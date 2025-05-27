@@ -1,14 +1,14 @@
-import { usePageStore } from "@/stores/pageStores";
-import { Link } from "expo-router";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { View, Text, StyleSheet, Animated, ScrollView } from "react-native";
-import { rootUrl } from "@/constants/endPoints";
-import ProfilePage from "@/components/src/organisms/ProfilePage/ProfilePage";
-import Footer from "@/components/src/atoms/Footer/Footer";
+import { useLocalSearchParams } from "expo-router";
+import { Text, View, ScrollView, Animated } from "react-native";
+import ProductCard from "@/components/src/molecules/ProductCard/ProductCard";
+import AffiliateCard from "@/components/src/molecules/AffiliateCard/AffiliateCard";
+import ToolManager from "@/components/src/organisms/ToolManager/ToolManager";
 import Header from "@/components/src/atoms/Header/Header";
+import Footer from "@/components/src/atoms/Footer/Footer";
 
-export default function ProfileScreen() {
+const ToolsScreen = () => {
+  const { tool } = useLocalSearchParams();
+
   return (
     <View style={{ flex: 1 }}>
       {/* Fixed Header */}
@@ -23,8 +23,7 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false} // Hide default indicator
         contentContainerStyle={{
           flexGrow: 1,
-          marginTop: -50,
-          // paddingTop: 80, // Adjust this value based on your header height
+          paddingTop: 80, // Adjust this value based on your header height
         }}
         // Custom scroll indicator container
         scrollIndicatorInsets={{ right: 1 }} // Small margin from right edge
@@ -34,6 +33,7 @@ export default function ProfileScreen() {
           style={{
             position: "absolute",
             right: 0,
+            top: 80,
             bottom: 0,
             width: 4,
             zIndex: 20,
@@ -59,8 +59,10 @@ export default function ProfileScreen() {
         </View>
 
         <View style={{ transform: [{ scale: 0.8 }] }}>
-          <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
-            <ProfilePage />
+          <View
+            style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto pt-4" }}
+          >
+            <ToolManager tool={tool} />
           </View>
         </View>
 
@@ -68,10 +70,6 @@ export default function ProfileScreen() {
       </ScrollView>
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
-});
+export default ToolsScreen;

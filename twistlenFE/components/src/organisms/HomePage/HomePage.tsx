@@ -1,231 +1,225 @@
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
-import Button from "../../atoms/Button/Button";
-import { Link } from "expo-router";
-import CustomImage from "../../atoms/CustomImage/CustomImage";
 import IconBlock from "../../atoms/IconBlock/IconBlock";
 import Typography from "../../atoms/Typography/Typography";
-import GenericTable from "../../atoms/GenericTable/GenericTable";
-import { truncateText } from "../../utils/shared.utils";
+import CustomImage from "../../atoms/CustomImage/CustomImage";
+import Button from "../../atoms/Button/Button";
 
 const HomePage = () => {
-  const productData = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      category: "Electronics",
-      image: "https://via.placeholder.com/50",
-      price: "$99",
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      name: "Smartwatch",
-      category: "Wearables",
-      image: "https://via.placeholder.com/50",
-      price: "$149",
-      rating: 4.2,
-    },
-    {
-      id: 3,
-      name: "Gaming Laptop",
-      category: "Computers",
-      image: "https://via.placeholder.com/50",
-      price: "$1299",
-      rating: 4.8,
-    },
-    {
-      id: 4,
-      name: "Bluetooth Speaker",
-      category: "Audio",
-      image: "https://via.placeholder.com/50",
-      price: "$49",
-      rating: 4.1,
-    },
-  ];
-
-  const columns = [
-    { key: "image", title: "Image" },
-    { key: "name", title: "Product", sortable: true },
-    { key: "category", title: "Category" },
-    { key: "price", title: "Price", sortable: true },
-    { key: "rating", title: "Rating", sortable: true },
-  ];
-
   return (
-    <View>
-      {/* Banner Section */}
-      <Text>HomePage</Text>
-      <CustomImage
-        source={{ uri: "https://picsum.photos/200" }}
-        shape="rectangle"
-        width={150}
-        height={100}
-        borderColor="blue"
-        overlayComponent={
-          <View
-            style={{
-              padding: 5,
-              backgroundColor: "rgba(0,0,0,0.5)",
-              width: "100%",
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 10 }}>New Arrival</Text>
-          </View>
-        }
-      />
-      <Link href="/(productmanager)">Add Products To Your Store</Link>
-      <Link href="/(fulfillmenttracker)">Track Your Orders</Link>
-
-      {/* Short DashBoards */}
+    <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto px-4" }}>
+      {/* stories from seller */}
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          borderColor: "rgba(0, 0, 0, 0.1)",
-          borderWidth: 1,
-          padding: 10,
-          borderRadius: 20,
+          $$css: true,
+          _: "flex justify-between flex-row mx-4",
+        }}
+      >
+        <IconBlock
+          icon={{
+            serviceType: "AntDesign",
+            iconName: "star",
+            size: 18,
+            color: "#FBBF24",
+            label: "Stories from Seller",
+            noBorder: true,
+            textStyle: {
+              fontSize: 16,
+              fontWeight: "normal",
+              fontFamily: "Inter",
+            },
+          }}
+        />
+        <Typography
+          text={"View All"}
+          fontSize={14}
+          fontWeight={"bold"}
+          style={{ fontFamily: "Inter" }}
+        />
+      </View>
+      <View
+        style={{
+          $$css: true,
+          _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-2",
         }}
       >
         <View
           style={{
-            borderRightColor: "rgba(0, 0, 0, 0.1)",
-            borderRightWidth: 1,
-            paddingHorizontal: 20,
+            backgroundColor: "#FFFFFF",
+            borderColor: "#E5E7EB",
+            borderWidth: 0.1,
+            borderRadius: 12,
+            padding: 20,
           }}
         >
-          <IconBlock
-            icon={{
-              serviceType: "MaterialCommunityIcons",
-              iconName: "cash-multiple",
-              size: 18,
-              color: "black",
-              noBorder: true,
-              label: "Total Earnings",
-              marginHorizontal: 5,
-              marginVertical: 5,
+          <View
+            style={{
+              $$css: true,
+              _: "flex flex-row items-center my-2",
             }}
+          >
+            <CustomImage
+              source={{ uri: "https://picsum.photos/300/200" }}
+              width={30}
+              height={30}
+              shape="circle"
+            />
+            <Typography
+              text={"Riya's Loom"}
+              fontSize={14}
+              fontWeight={"bold"}
+              style={{ fontFamily: "Inter", marginLeft: 10 }}
+            />
+          </View>
+          <Typography
+            text={
+              "“This scarf was made by my grandmother during winter evenings.”"
+            }
+            fontSize={14}
+            fontWeight={"normal"}
+            style={{ fontFamily: "Inter", marginLeft: 10, marginVertical: 4 }}
           />
-          <Typography text="10,000" style={{ marginLeft: 30 }} />
-        </View>
-        <View style={{ paddingHorizontal: 20 }}>
-          <IconBlock
-            icon={{
-              serviceType: "MaterialCommunityIcons",
-              iconName: "search-web",
-              size: 18,
-              color: "black",
-              noBorder: true,
-              label: "Traffic",
-              marginHorizontal: 5,
-              marginVertical: 5,
+          <View style={{ alignSelf: "flex-start", marginVertical: 4 }}>
+            <Button
+              title="#handmade"
+              buttonColor="#E5E7EB"
+              borderRadius={50}
+              borderColor="#3730A3"
+              textColor="#3730A3"
+              verticalPadding={2}
+              horizontalPadding={10}
+              textStyle={{
+                fontWeight: "normal",
+                fontSize: 12,
+              }}
+            />
+          </View>
+
+          <View
+            style={{
+              $$css: true,
+              _: "flex flex-row justify-between my-2",
             }}
-          />
-          <Typography text="1k" style={{ marginLeft: 30 }} />
+          >
+            <IconBlock
+              icon={{
+                serviceType: "EvilIcons",
+                iconName: "like",
+                size: 18,
+                color: "#6B7280",
+                label: "24 Likes",
+                noBorder: true,
+                textStyle: {
+                  fontSize: 16,
+                  fontWeight: "normal",
+                  fontFamily: "Inter",
+                },
+              }}
+            />
+            <IconBlock
+              icon={{
+                serviceType: "EvilIcons",
+                iconName: "comment",
+                size: 18,
+                color: "#6B7280",
+                label: "Comments",
+                noBorder: true,
+                textStyle: {
+                  fontSize: 16,
+                  fontWeight: "normal",
+                  fontFamily: "Inter",
+                },
+              }}
+            />
+          </View>
         </View>
       </View>
 
-      {/* Community Quotes */}
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Typography text="Recent Quotes" fontWeight="bold" />
-        <Link href="/(community)">View All</Link>
-      </View>
-
+      {/* micro trending */}
       <View
         style={{
-          padding: 10,
-          borderColor: "rgba(0, 0, 0, 0.1)",
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
+          $$css: true,
+          _: "flex justify-between flex-row mx-4 mt-2",
         }}
       >
-        <Typography
-          text={truncateText("I wants pair of shoes under 500 rupees", 10)}
+        <IconBlock
+          icon={{
+            serviceType: "AntDesign",
+            iconName: "star",
+            size: 18,
+            color: "#FBBF24",
+            label: "Micro Trending",
+            noBorder: true,
+            textStyle: {
+              fontSize: 16,
+              fontWeight: "normal",
+              fontFamily: "Inter",
+            },
+          }}
         />
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Typography
-            text="By Pinaki"
-            color="rgba(0,0,0,0.7)"
-            fontWeight="bold"
-          />
-          <Typography
-            text="3 days ago"
-            color="rgba(0,0,0,0.3)"
-            fontWeight="normal"
-            fontSize={12}
-            style={{ marginHorizontal: 5 }}
-          />
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <IconBlock
-            icon={{
-              serviceType: "MaterialCommunityIcons",
-              iconName: "comment-multiple-outline",
-              size: 12,
-              color: "black",
-              noBorder: true,
-              label: "25",
-              marginHorizontal: 5,
-              marginVertical: 5,
+        <Typography
+          text={"View All"}
+          fontSize={14}
+          fontWeight={"bold"}
+          style={{ fontFamily: "Inter" }}
+        />
+      </View>
+      <View
+        style={{
+          $$css: true,
+          _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5",
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "#FFFFFF",
+            borderColor: "#E5E7EB",
+            borderWidth: 0.1,
+            borderRadius: 12,
+            padding: 20,
+            flexWrap: "wrap",
+          }}
+        >
+          <View
+            style={{
+              $$css: true,
+              _: "flex flex-row items-center my-2",
             }}
-          />
-          <IconBlock
-            icon={{
-              serviceType: "AntDesign",
-              iconName: "like1",
-              size: 12,
-              color: "black",
-              noBorder: true,
-              label: "100",
-              marginHorizontal: 5,
-              marginVertical: 5,
-            }}
-          />
-          <IconBlock
-            icon={{
-              serviceType: "AntDesign",
-              iconName: "like2",
-              size: 12,
-              color: "black",
-              noBorder: true,
-              label: "10",
-              marginHorizontal: 5,
-              marginVertical: 5,
-            }}
-          />
+          >
+            <CustomImage
+              source={{ uri: "https://picsum.photos/300/200" }}
+              width={30}
+              height={30}
+              shape="circle"
+            />
+
+            <Typography
+              text={
+                "“This scarf was made by my grandmother during winter evenings.”"
+              }
+              fontSize={14}
+              fontWeight={"normal"}
+              style={{ fontFamily: "Inter", marginLeft: 10 }}
+            />
+          </View>
+
+          <View style={{ alignSelf: "flex-start", marginVertical: 4 }}>
+            <Button
+              title="#handmade"
+              buttonColor="#E5E7EB"
+              borderRadius={50}
+              borderColor="#3730A3"
+              textColor="#3730A3"
+              verticalPadding={2}
+              horizontalPadding={10}
+              textStyle={{
+                fontWeight: "normal",
+                fontSize: 12,
+              }}
+            />
+          </View>
         </View>
       </View>
-
-      {/* Trending Products */}
-      <GenericTable
-        columns={columns}
-        data={productData}
-        heading="Trending Products"
-        renderCell={(col, item) => {
-          if (col.key === "image") {
-            return (
-              <Image
-                source={{ uri: item.image }}
-                style={{ width: 50, height: 50 }}
-              />
-            );
-          }
-          if (col.key === "rating") {
-            return (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons name="star" size={16} color="gold" />
-                <Text style={{ marginLeft: 5 }}>{item.rating}</Text>
-              </View>
-            );
-          }
-          return <Text>{item[col.key]}</Text>;
-        }}
-        rowsPerPage={3}
-        hidePagination={true}
-        hideSearch={true}
-        themeColor="#ff5722"
-      />
     </View>
   );
 };

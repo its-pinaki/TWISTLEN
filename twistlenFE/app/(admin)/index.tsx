@@ -7,6 +7,9 @@ import { rootUrl } from "@/constants/endPoints";
 import Admin from "@/adminconfig/Admin";
 import SidebarNavigation from "@/components/src/atoms/SideBarNavigation/SideBarNavigation";
 import ProductManager from "@/components/src/organisms/ProductManager/ProductManager";
+import Header from "@/components/src/atoms/Header/Header";
+import Footer from "@/components/src/atoms/Footer/Footer";
+import OrderManager from "@/components/src/organisms/OrderManager/OrderManager";
 
 export default function AdminScreen() {
   const { setIsLoading, isLoading, setPages, pages } = usePageStore();
@@ -43,13 +46,20 @@ export default function AdminScreen() {
       iconService: "Entypo",
       iconName: "shop",
     },
-    // { name: "ORDER MANAGER", component: EquipmentManager },
+    {
+      name: "ORDER MANAGER",
+      component: OrderManager,
+      iconService: "Ionicons",
+      iconName: "file-tray-stacked",
+    },
     // { name: "USER MANAGER", component: LocationManager },
   ];
 
   return (
     <View style={styles.container}>
+      <Header />
       <SidebarNavigation tabs={tabs} />
+      <Footer />
     </View>
   );
 }

@@ -27,6 +27,7 @@ interface TableProps {
   hidePagination?: boolean;
   hideSearch?: boolean;
   heading?: string;
+  isItemSelectAllEnabled?: boolean;
 }
 
 const GenericTable: React.FC<TableProps> = ({
@@ -38,6 +39,7 @@ const GenericTable: React.FC<TableProps> = ({
   hidePagination = false,
   hideSearch = false,
   heading,
+  isItemSelectAllEnabled = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -184,103 +186,135 @@ const GenericTable: React.FC<TableProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      {heading && <Text style={styles.heading}>{heading}</Text>}
+    <ScrollView
+      horizontal
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsHorizontalScrollIndicator={true}
+    >
+      <View style={styles.container}>
+        {heading && <Text style={styles.heading}>{heading}</Text>}
 
-      {!hideSearch && (
-        <TextInput
-          style={[styles.searchInput, { borderColor: themeColor }]}
-          placeholder="Search..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-      )}
-
-      <View style={[styles.header, { backgroundColor: themeColor }]}>
-        <View style={[styles.headerCell, { width: 40 }]}>
-          <Checkbox
-            status={
-              selectedRows.length === paginatedData.length &&
-              paginatedData.length > 0
-                ? "checked"
-                : "unchecked"
-            }
-            onPress={() => {
-              if (selectedRows.length === paginatedData.length) {
-                setSelectedRows([]);
-              } else {
-                setSelectedRows(paginatedData);
-              }
-              if (onSelectionChange) onSelectionChange(paginatedData);
-            }}
+        {!hideSearch && (
+          <TextInput
+            style={[styles.searchInput, { borderColor: themeColor }]}
+            placeholder="Search..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
-        </View>
-        {columns.map((col) => (
-          <TouchableOpacity
-            key={col.key}
-            style={[styles.headerCell, col.sortable && styles.sortableHeader]}
-            onPress={() => col.sortable && handleSort(col.key)}
-            disabled={!col.sortable}
-          >
-            <Text style={styles.headerText}>{col.title}</Text>
-            {col.sortable && (
-              <Ionicons
-                name={
-                  sortColumn === col.key && sortOrder === "asc"
-                    ? "arrow-up"
-                    : "arrow-down"
+        )}
+
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: "#F9FAFB",
+              borderColor: "#E5E7EB",
+              borderWidth: 0.5,
+            },
+          ]}
+        >
+          {isItemSelectAllEnabled && (
+            <View style={[styles.headerCell, { width: 40 }]}>
+              <Checkbox
+                status={
+                  selectedRows.length === paginatedData.length &&
+                  paginatedData.length > 0
+                    ? "checked"
+                    : "unchecked"
                 }
-                size={16}
-                color="white"
+                onPress={() => {
+                  if (selectedRows.length === paginatedData.length) {
+                    setSelectedRows([]);
+                  } else {
+                    setSelectedRows(paginatedData);
+                  }
+                  if (onSelectionChange) onSelectionChange(paginatedData);
+                }}
               />
-            )}
-          </TouchableOpacity>
-        ))}
-      </View>
+            </View>
+          )}
+          {columns.map((col) => (
+            <TouchableOpacity
+              key={col.key}
+              style={[styles.headerCell, col.sortable && styles.sortableHeader]}
+              onPress={() => col.sortable && handleSort(col.key)}
+              disabled={!col.sortable}
+            >
+              <Text style={styles.headerText}>{col.title}</Text>
+              {col.sortable && (
+                <Ionicons
+                  name={
+                    sortColumn === col.key && sortOrder === "asc"
+                      ? "arrow-up"
+                      : "arrow-down"
+                  }
+                  size={16}
+                  color="white"
+                />
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <ScrollView
-        horizontal
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsHorizontalScrollIndicator={false}
-      >
-        <View style={styles.tableWrapper}>
-          <FlatList
-            data={paginatedData}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.row}>
-                <View style={[styles.cell, { width: 40 }]}>
-                  <Checkbox
-                    status={
-                      selectedRows.some((selected) => selected.id === item.id)
-                        ? "checked"
-                        : "unchecked"
-                    }
-                    onPress={() => toggleRowSelection(item)}
-                  />
+        <ScrollView
+          horizontal
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={styles.tableWrapper}>
+            <FlatList
+              data={paginatedData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.row}>
+                  {isItemSelectAllEnabled && (
+                    <View style={[styles.cell, { width: 40 }]}>
+                      <Checkbox
+                        status={
+                          selectedRows.some(
+                            (selected) => selected.id === item.id
+                          )
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => toggleRowSelection(item)}
+                      />
+                    </View>
+                  )}
+                  {columns.map((col) => (
+                    <View key={col.key} style={styles.cell}>
+                      {col.render ? (
+                        col.render(item)
+                      ) : (
+                        <Text>{item[col.key]}</Text>
+                      )}
+                    </View>
+                  ))}
                 </View>
-                {columns.map((col) => (
-                  <View key={col.key} style={styles.cell}>
-                    {col.render ? col.render(item) : <Text>{item[col.key]}</Text>}
-                  </View>
-                ))}
-              </View>
-            )}
-          />
-        </View>
-      </ScrollView>
+              )}
+            />
+          </View>
+        </ScrollView>
 
-      {!hidePagination && (
-        <View style={{display:"flex",justifyContent:"space-between",flexDirection:"row",alignItems:"center"}}>
-          <Text style={{ textAlign: "center", marginTop: 10 }}>
-            Showing {(currentPage - 1) * rowsPerPage + 1} to{" "}
-            {Math.min(currentPage * rowsPerPage, sortedData.length)} of{" "}
-            {sortedData.length} results
-          </Text>
-          {renderPagination()}
-        </View>
-      )}
-    </View>
+        {!hidePagination && (
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ textAlign: "center", marginTop: 10 }}>
+              Showing {(currentPage - 1) * rowsPerPage + 1} to{" "}
+              {Math.min(currentPage * rowsPerPage, sortedData.length)} of{" "}
+              {sortedData.length} results
+            </Text>
+            {renderPagination()}
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -288,12 +322,13 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     backgroundColor: "#fff",
+    width:"100%"
   },
   heading: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
+    marginVertical: 10,
+    // textAlign: "center",
   },
   searchInput: {
     borderWidth: 1,
@@ -320,7 +355,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: "bold",
-    color: "white",
+    color: "black",
   },
   row: {
     flexDirection: "row",

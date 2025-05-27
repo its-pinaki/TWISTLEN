@@ -6,11 +6,17 @@ import { View, Text, StyleSheet } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
 import Admin from "@/adminconfig/Admin";
 import ProductListPage from "@/components/src/organisms/ProductListPage/ProductListPage";
+import CheckOut from "@/components/src/organisms/CheckOut/CheckOut";
 
 export default function OrderCheckoutScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Order Checkout</Text>
+    <View
+      style={{
+        $$css: true,
+        _: "flex justify-between flex-col md:flex-row",
+      }}
+    >
+      <CheckOut />
     </View>
   );
 }

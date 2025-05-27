@@ -4,21 +4,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { View, Text, StyleSheet } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
-import HomePage from "@/components/src/organisms/HomePage/HomePage";
+import ProductAddition from "@/components/src/organisms/ProductAddition/ProductAddition";
 
-export default function PlpScreen() {
-  return (
-    <View style={styles.container}>
-      <HomePage />
-    </View>
-  );
+export default function ProductAdditionScreen() {
+  return <ProductAddition />;
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // margin: 50,
+    backgroundColor: "#fff",
   },
 });

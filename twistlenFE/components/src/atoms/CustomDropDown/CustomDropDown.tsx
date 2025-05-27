@@ -70,10 +70,10 @@ const CustomDropDown: React.FC<CustomDropDownProps> = ({
   };
 
   return (
-    <View style={[CustomDropDownStyles.container, { borderColor: bordercolor || "#ddd", borderWidth: 1, borderRadius: 5, padding: 10 }]}> 
+    <View style={[CustomDropDownStyles.container, { borderColor: bordercolor || "#ddd", borderWidth: 1, borderRadius: 8, padding: 10 }]}> 
       <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)} style={CustomDropDownStyles.button}>
         <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-          <Text style={CustomDropDownStyles.buttonText}>
+          <Text style={{marginRight: 10, fontSize: 16, color: "#333"}}>
             {single
               ? selectedItems?.length > 0
                 ? selectedItems[0][displayName]

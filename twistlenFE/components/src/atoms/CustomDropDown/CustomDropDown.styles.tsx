@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const CustomDropDownStyles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 12,
     // elevation: 3,
     // shadowColor: "#000",

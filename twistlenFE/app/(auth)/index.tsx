@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import AuthForm from "@/components/src/organisms/AuthForm/AuthForm";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -28,24 +28,35 @@ export default function AuthScreen() {
     fetchPages();
   }, []);
   console.log("pages", pages);
-  
+
   return (
-    <View style={styles.container}>
-      {/* <Text>Hi This is AuthScreen</Text> */}
-      {pages
-        ?.find((page) => page.name === "Home")
-        ?.objects?.map((obj) => {
-          const Component = componentMap[obj.type];
-          return Component ? <Component key={obj.id} {...obj.properties} /> : null;
-        })}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text>Hi This is AuthScreen</Text> */}
+        {pages
+          ?.find((page) => page.name === "Home")
+          ?.objects?.map((obj, index, arr) => {
+            const Component = componentMap[obj.type];
+            const isFirst = index === 0;
+            const isLast = index === arr.length - 1;
+            return Component ? (
+              <View
+          style={{
+            marginVertical: isFirst || isLast ? 0 : 50,
+          }}
+          key={obj.id}
+              >
+          <Component key={obj.id} {...obj.properties} />
+              </View>
+            ) : null;
+          })}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

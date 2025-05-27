@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
 import React, { useState } from "react";
 import Typography from "../../atoms/Typography/Typography";
 import Input from "../../atoms/Input/Input";
@@ -8,6 +14,7 @@ import GenericTable from "../../atoms/GenericTable/GenericTable";
 import CustomModal from "../../atoms/CustomModal/CustomModal";
 import Stepper from "../../atoms/Stepper/Stepper";
 import IconBlock from "../../atoms/IconBlock/IconBlock";
+import { router } from "expo-router";
 
 const ProductManager = () => {
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -210,18 +217,142 @@ const ProductManager = () => {
     );
   };
   const columns = [
-    { key: "id", title: "ID" },
-    { key: "name", title: "Name", sortable: true },
-    { key: "age", title: "Age", sortable: true },
-    { key: "email", title: "Email" },
+    { key: "product", title: "Product" },
+    { key: "stock", title: "Stock", sortable: true },
+    { key: "price", title: "Price", sortable: true },
+    { key: "status", title: "Status" },
+    { key: "created", title: "Created" },
+    { key: "actions", title: "Actions" },
   ];
 
   const data = [
-    { id: 1, name: "Alice", age: 25, email: "alice@example.com" },
-    { id: 2, name: "Bob", age: 30, email: "bob@example.com" },
-    { id: 3, name: "Bob", age: 30, email: "bob@example.com" },
-    { id: 4, name: "Bob", age: 30, email: "bob@example.com" },
-    { id: 5, name: "Bob", age: 30, email: "bob@example.com" },
+    {
+      product: (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <ImageBackground
+            source={{ uri: "https://picsum.photos/200" }}
+            style={{
+              height: 30,
+              width: 30,
+              borderRadius: 5,
+              backgroundColor: "#E0F7FA",
+              marginRight: 10,
+            }}
+            imageStyle={{ borderRadius: 8 }}
+          ></ImageBackground>
+          <View>
+            <Typography
+              text={"Wireless HeadPhone Pro"}
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+                fontFamily: "",
+                color: "#000000",
+                margin: 0,
+              }}
+            />
+            <Typography
+              text={"#sku-231"}
+              style={{
+                fontSize: 14,
+                fontWeight: "bold",
+                fontFamily: "",
+                color: "#6B7280",
+                margin: 0,
+              }}
+            />
+          </View>
+        </View>
+      ),
+      stock: (
+        <Typography
+          text={"124"}
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            fontFamily: "",
+            color: "#000000",
+            margin: 0,
+          }}
+        />
+      ),
+      price: (
+        <Typography
+          text={"$230.00"}
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            fontFamily: "",
+            color: "#000000",
+            margin: 0,
+          }}
+        />
+      ),
+      status: (
+        <Typography
+          text={"Active"}
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            borderRadius: 15,
+            color: "#047857",
+            margin: 0,
+            backgroundColor: "#D1FAE5",
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+          }}
+        />
+      ),
+      created: (
+        <Typography
+          text={"Jan 15, 2025"}
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            fontFamily: "",
+            color: "#6B7280",
+            margin: 0,
+          }}
+        />
+      ),
+      actions: (
+        <View
+          style={{
+            $$css: true,
+            _: "flex flex-row gap-2",
+          }}
+        >
+          <IconBlock
+            icon={{
+              serviceType: "MaterialIcons",
+              iconName: "delete",
+              size: 16,
+              color: "#EF4444",
+              noBorder: true,
+              style: {
+                backgroundColor: "#FEE2E2",
+                borderRadius: 8,
+                padding: 3,
+              },
+            }}
+          />
+          <IconBlock
+            icon={{
+              serviceType: "AntDesign",
+              iconName: "eye",
+              size: 16,
+              color: "#2563EB",
+              noBorder: true,
+              style: {
+                backgroundColor: "#E5E7EB",
+                borderRadius: 8,
+                padding: 3,
+              },
+            }}
+          />
+        </View>
+      ),
+    },
   ];
 
   return (
@@ -309,6 +440,9 @@ const ProductManager = () => {
             borderColor="#E5E7EB"
             mode={"outlined"}
             horizontalMargin={10}
+            onPress={() => {
+              router.push("/productaddition");
+            }}
           />
         </View>
       </View>
@@ -331,8 +465,8 @@ const ProductManager = () => {
             // shadowOpacity: 0.05,
             // shadowRadius: 4,
             // elevation: 2,
-            borderWidth:0.1,
-            borderColor:"#E5E7EB"
+            borderWidth: 0.1,
+            borderColor: "#E5E7EB",
           }}
         >
           <IconBlock
@@ -345,9 +479,8 @@ const ProductManager = () => {
               style: {
                 backgroundColor: "#DBEAFE",
                 borderRadius: 8,
-                paddingHorizontal:8
+                paddingHorizontal: 8,
               },
-
             }}
           />
 
@@ -370,8 +503,8 @@ const ProductManager = () => {
             // shadowOpacity: 0.05,
             // shadowRadius: 4,
             // elevation: 2,
-            borderWidth:0.1,
-            borderColor:"#E5E7EB"
+            borderWidth: 0.1,
+            borderColor: "#E5E7EB",
           }}
         >
           <IconBlock
@@ -384,7 +517,7 @@ const ProductManager = () => {
               style: {
                 backgroundColor: "#D1FAE5",
                 borderRadius: 8,
-                paddingHorizontal:8
+                paddingHorizontal: 8,
               },
             }}
           />
@@ -408,8 +541,8 @@ const ProductManager = () => {
             // shadowOpacity: 0.05,
             // shadowRadius: 4,
             // elevation: 2,
-            borderWidth:0.1,
-            borderColor:"#E5E7EB"
+            borderWidth: 0.1,
+            borderColor: "#E5E7EB",
           }}
         >
           <IconBlock
@@ -422,7 +555,7 @@ const ProductManager = () => {
               style: {
                 backgroundColor: "#FEF3C7",
                 borderRadius: 8,
-                paddingHorizontal:8
+                paddingHorizontal: 8,
               },
             }}
           />
@@ -439,7 +572,7 @@ const ProductManager = () => {
         columns={columns}
         data={data}
         rowsPerPage={3}
-        themeColor="#FF5733"
+        themeColor="#2563EB"
       />
     </ScrollView>
   );

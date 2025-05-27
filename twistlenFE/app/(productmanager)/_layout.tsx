@@ -14,6 +14,7 @@ export default function ProductManagerLayout() {
       }}
     >
       <Stack.Screen name="index"  />
+      <Stack.Screen name="productaddition"  />
     </Stack>
   );
 }

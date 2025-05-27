@@ -3,16 +3,19 @@ import { View, Text, useWindowDimensions } from "react-native";
 
 type StepperProps = {
   steps: string[];
+  icons: React.ReactNode[]; // New prop for icons
   activeStep: number;
   activeColor: string;
   inactiveColor: string;
 };
 
-const Stepper: React.FC<StepperProps> = ({ steps, activeStep, activeColor, inactiveColor }) => {
+const Stepper: React.FC<StepperProps> = ({ steps, icons, activeStep, activeColor, inactiveColor }) => {
   const { width } = useWindowDimensions();
-  const fontSize = width < 400 ? 8 : 10;
-  const stepperWidth = width < 400 ? 15 : 20;
-  const stepperHeight = width < 400 ? 15 : 20;
+  const isSmallScreen = width < 400;
+
+  const fontSize = isSmallScreen ? 8 : 10;
+  const stepperWidth = isSmallScreen ? 30 : 40;
+  const stepperHeight = isSmallScreen ? 30 : 40;
 
   return (
     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", paddingVertical: 20, flexWrap: "wrap" }}>
@@ -23,7 +26,7 @@ const Stepper: React.FC<StepperProps> = ({ steps, activeStep, activeColor, inact
               style={{
                 width: stepperWidth,
                 height: stepperHeight,
-                borderRadius: 20,
+                borderRadius: 25,
                 backgroundColor: index === activeStep ? activeColor : inactiveColor,
                 justifyContent: "center",
                 alignItems: "center",
@@ -34,9 +37,15 @@ const Stepper: React.FC<StepperProps> = ({ steps, activeStep, activeColor, inact
                 elevation: 5,
               }}
             >
-              <Text style={{ color: "#fff", fontWeight: "bold", fontSize: fontSize + 2 }}>{index + 1}</Text>
+              {icons?.[index] || (
+                <Text style={{ color: "#fff", fontWeight: "bold", fontSize: fontSize + 2 }}>{index + 1}</Text>
+              )}
             </View>
-            <Text style={{ marginTop: 8, textAlign: "center", fontSize: fontSize, fontWeight: "600", color: "#555" }}>{step}</Text>
+            {!isSmallScreen && (
+              <Text style={{ marginTop: 8, textAlign: "center", fontSize: fontSize, fontWeight: "600", color: "#555" }}>
+                {step}
+              </Text>
+            )}
           </View>
           {index < steps.length - 1 && (
             <View

@@ -21,8 +21,17 @@ const AffiliateCard = () => {
             style={styles.productImage}
             imageStyle={{ borderRadius: 8 }}
           ></ImageBackground>
-          <View style={{flexWrap: "wrap", flexDirection: "column", flexShrink: 1, maxWidth: "100%"}}>
-            <Text style={styles.productTitle}>Premium Wireless Earbuds aafa</Text>
+          <View
+            style={{
+              flexWrap: "wrap",
+              flexDirection: "column",
+              flexShrink: 1,
+              maxWidth: "100%",
+            }}
+          >
+            <Text style={styles.productTitle}>
+              Premium Wireless Earbuds aafa
+            </Text>
             <Text style={styles.productCategory}>Electronics Category</Text>
           </View>
         </View>
@@ -50,7 +59,7 @@ const AffiliateCard = () => {
       <View style={styles.linkBox}>
         <Typography
           text={"https://yourbrand.com/p/123?ref=alice"}
-          style={{ fontSize: 16, fontWeight: "normal", fontFamily: "Inter" }}
+          style={{ fontSize: 16, fontWeight: "regular" }}
         />
         {/* <IconBlock
           icon={{
@@ -77,8 +86,7 @@ const AffiliateCard = () => {
                 // reverseLabel: true,
                 textStyle: {
                   fontSize: 16,
-                  fontWeight: "normal",
-                  fontFamily: "Inter",
+                  fontWeight: "regular",
                   color: "#FFFFFF",
                 },
               }}
@@ -101,8 +109,8 @@ const AffiliateCard = () => {
                 // reverseLabel: true,
                 textStyle: {
                   fontSize: 16,
-                  fontWeight: "normal",
-                  fontFamily: "Inter",
+                  fontWeight: "regular",
+
                   color: "#374151",
                 },
               }}
@@ -152,7 +160,7 @@ const AffiliateCard = () => {
             style={{
               fontSize: 24,
               fontWeight: "500",
-              fontFamily: "Inter",
+
               color: "#000000",
               margin: 0,
             }}
@@ -161,8 +169,8 @@ const AffiliateCard = () => {
             text={"Clicks"}
             style={{
               fontSize: 14,
-              fontWeight: "normal",
-              fontFamily: "Inter",
+              fontWeight: "regular",
+
               color: "#6B7280",
               margin: 0,
             }}
@@ -181,7 +189,7 @@ const AffiliateCard = () => {
             style={{
               fontSize: 24,
               fontWeight: "500",
-              fontFamily: "Inter",
+
               color: "#000000",
               margin: 0,
             }}
@@ -190,8 +198,7 @@ const AffiliateCard = () => {
             text={"Conversions"}
             style={{
               fontSize: 14,
-              fontWeight: "normal",
-              fontFamily: "Inter",
+              fontWeight: "regular",
               color: "#6B7280",
               margin: 0,
             }}
@@ -210,7 +217,6 @@ const AffiliateCard = () => {
             style={{
               fontSize: 24,
               fontWeight: "500",
-              fontFamily: "Inter",
               color: "#059669",
               margin: 0,
             }}
@@ -219,8 +225,7 @@ const AffiliateCard = () => {
             text={"Earnings"}
             style={{
               fontSize: 14,
-              fontWeight: "normal",
-              fontFamily: "Inter",
+              fontWeight: "regular",
               color: "#6B7280",
               margin: 0,
             }}
@@ -260,18 +265,16 @@ const styles = StyleSheet.create({
   productTitle: {
     fontWeight: "500",
     fontSize: 18,
-    fontFamily: "Inter",
     color: "#000000",
     flexShrink: 1,
-  flexWrap: "wrap",
+    flexWrap: "wrap",
   },
   productCategory: {
     fontSize: 14,
     color: "#6B7280",
-    fontFamily: "Inter",
-    fontWeight: "normal",
+    fontWeight: "regular",
     flexShrink: 1,
-  flexWrap: "wrap",
+    flexWrap: "wrap",
   },
   infoRow: {
     flexDirection: "row",
@@ -283,26 +286,23 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: "#4B5563",
-    fontWeight: "normal",
-    fontFamily: "Inter",
+    fontWeight: "regular",
   },
   text: {
     color: "#4B5563",
     fontSize: 16,
     fontWeight: "500",
-    fontFamily: "Inter",
   },
   greenText: {
     color: "#059669",
     fontSize: 16,
     fontWeight: "500",
-    fontFamily: "Inter",
   },
   linkBox: {
     flexDirection: "row",
-    justifyContent:"space-between",
+    justifyContent: "space-between",
     padding: 8,
-    margin:10,
+    margin: 10,
     borderWidth: 0.5,
     borderColor: "#E5E7EB",
     borderRadius: 6,
