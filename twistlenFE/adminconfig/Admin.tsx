@@ -140,16 +140,8 @@ const Admin = () => {
                   <View style={styles.pageItem}>
                     <TouchableOpacity
                       onPress={() => {
-                        let routeName = item?.name
-                          ?.replace(/\s+/g, "") // Remove spaces
-                          ?.replace(/-/g, "_") // Replace hyphens with underscores
-                          ?.toLowerCase();
-
-                        if (routeName === "home") {
-                          routeName = "auth"; // Change "home" to "auth"
-                        }
-
-                        router.push(`/(${routeName})`);
+                        let routeName = item?.name?.toLowerCase();
+                        router.push(`/${routeName}`);
                       }}
                     >
                       <Text style={styles.pageText}>{item.name}</Text>

@@ -8,14 +8,18 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Stepper from "../../atoms/Stepper/Stepper";
-import Input from "../../atoms/Input/Input";
 import ProductBasicDetailsForm from "./ProductBasicDetailsForm";
 import ProductPricingForm from "./ProductPricingForm";
 import ProductMediaForm from "./ProductMediaForm";
 import ProductShippingForm from "./ProductShippingForm";
 import ProductSEOMetadataForm from "./ProductSEOMetadataForm";
 import Button from "../../atoms/Button/Button";
-import { AntDesign, Entypo, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const ProductAddition = () => {
   const steps = [
@@ -23,16 +27,27 @@ const ProductAddition = () => {
     "Price Details",
     "Media Details",
     "Shipping Details",
-    "Seo Details",
+    "SEO Details",
   ];
-  const icons=[
+  const icons = [
     <AntDesign name="infocirlceo" size={24} color="black" />,
     <Entypo name="price-tag" size={24} color="black" />,
     <MaterialIcons name="perm-media" size={24} color="black" />,
     <MaterialIcons name="local-shipping" size={24} color="black" />,
-    <MaterialCommunityIcons name="store-search-outline" size={24} color="black" />,
-  ]
+    <MaterialCommunityIcons
+      name="store-search-outline"
+      size={24}
+      color="black"
+    />,
+  ];
   const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState({
+    basicDetails: {},
+    pricing: {},
+    media: {},
+    shipping: {},
+    seo: {},
+  });
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
@@ -45,7 +60,6 @@ const ProductAddition = () => {
       setActiveStep(activeStep - 1);
     }
   };
-
   const dummyProductData = {
     title: "Premium Wireless Headphones",
     slug: "premium-wireless-headphones",
@@ -107,39 +121,32 @@ const ProductAddition = () => {
       "twitter:card": "summary_large_image",
     },
   };
-
-  const handleSubmit = (formData) => {
-    console.log("Form submitted with data:", formData);
-    alert("Form submitted successfully! Check console for data.");
+  const updateFormData = (step, data) => {
+    setFormData((prev) => ({
+      ...prev,
+      [step]: data,
+    }));
   };
 
-  const handlePriceSubmit = (formData) => {
-    console.log("Pricing submitted:", formData);
-    alert("Pricing saved! Check console for data.");
-  };
-
-  const handleMediaSubmit = (formData) => {
-    console.log("Media submitted:", formData);
-    alert("Media saved! Check console for data.");
-  };
-
-  const handleShippingDetailsSubmit = (formData) => {
-    console.log("Shipping details submitted:", formData);
-    alert("Shipping details saved! Check console for data.");
-  };
-
-  const handleSeoDetailsSubmit = (formData) => {
-    console.log("SEO Metadata submitted:", formData);
-    alert("SEO Metadata saved! Check console for data.");
+  const handleSubmit = () => {
+    const finalData = {
+      ...formData.basicDetails,
+      ...formData.pricing,
+      ...formData.media,
+      ...formData.shipping,
+      ...formData.seo,
+    };
+    console.log("Final form data:", finalData);
+    alert("Product submitted successfully!");
   };
 
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
         style={styles.keyboardView}
       >
+        {/* Stepper */}
         <View style={styles.stepperContainer}>
           <Stepper
             steps={steps}
@@ -150,23 +157,29 @@ const ProductAddition = () => {
           />
         </View>
 
+        {/* Scrollable Content */}
         <ScrollView
-          // style={styles.scrollView}
-          // contentContainerStyle={styles.scrollContent}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.formContainer}>
+          <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
             {activeStep === 0 && (
               <ProductBasicDetailsForm
-                initialData={dummyProductData}
-                onSubmit={handleNext}
+                initialData={formData.basicDetails}
+                onSubmit={(data) => {
+                  updateFormData("basicDetails", data);
+                  handleNext();
+                }}
               />
             )}
             {activeStep === 1 && (
               <ProductPricingForm
-                initialData={dummyPricingData}
-                onSubmit={handleNext}
+                initialData={formData.pricing}
+                onSubmit={(data) => {
+                  updateFormData("pricing", data);
+                  handleNext();
+                }}
                 onBack={handlePrev}
               />
             )}
@@ -193,27 +206,27 @@ const ProductAddition = () => {
             )}
           </View>
         </ScrollView>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 16,
-          }}
-        >
-          <Button
-            title="Back"
-            // onPress={onBack}
-            mode="contained"
-            style={{ marginTop: 20 }}
-          />
-          {/* Submit Button */}
-          <Button
-            title="Save Media"
-            // onPress={handleSubmit}
-            mode="contained"
-            style={{ marginTop: 20 }}
-          />
+
+        {/* Fixed Footer with Buttons */}
+        <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
+          <View style={styles.footer}>
+            {activeStep > 0 && (
+              <Button
+                title="Back"
+                onPress={handlePrev}
+                mode="outlined"
+                style={styles.button}
+              />
+            )}
+            <Button
+              title={activeStep === steps.length - 1 ? "Submit" : "Next"}
+              onPress={
+                activeStep === steps.length - 1 ? handleSubmit : handleNext
+              }
+              mode="contained"
+              style={styles.button}
+            />
+          </View>
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -232,16 +245,27 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: Platform.OS === "ios" ? 50 : 20,
   },
-  // scrollView: {
-  //   flex: 1,
-  //   paddingBottom: 120,
-  // },
-  // scrollContent: {
-  //   flexGrow: 1,
-  //   paddingBottom: 120,
-  // },
-  formContainer: {
-    paddingHorizontal: 16,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100, // Space for fixed footer
+  },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 16,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+  },
+  button: {
+    // flex: 1,
+    // marginHorizontal: 8,
   },
 });
 

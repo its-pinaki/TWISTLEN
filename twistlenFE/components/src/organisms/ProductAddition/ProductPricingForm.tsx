@@ -3,7 +3,9 @@ import { View, ScrollView, StyleSheet } from "react-native";
 import Input from "../../atoms/Input/Input";
 import ToggleButton from "../../atoms/ToggleButton/ToggleButton";
 import Button from "../../atoms/Button/Button";
+import CustomFormMultiCheckBox from "../../atoms/CustomFormMultiCheckBox/CustomFormMultiCheckBox";
 const ProductPricingForm = ({ initialData = {}, onSubmit, onBack }) => {
+  const [selected, setSelected] = useState([]);
   // Form state
   const [formData, setFormData] = useState({
     price: "",
@@ -74,27 +76,22 @@ const ProductPricingForm = ({ initialData = {}, onSubmit, onBack }) => {
       />
 
       {/* Currency */}
-      <ToggleButton
+      {/* <ToggleButton
         options={currencyOptions}
         onToggle={(selected) => handleChange("currency", selected)}
         initialSelected={formData.currency}
         style={{ marginVertical: 10 }}
         textStyle={{ fontSize: 14 }}
+      /> */}
+      <CustomFormMultiCheckBox
+        items={[
+          { id: 1, name: "Tax Included", value: "Tax Included" },
+          { id: 2, name: "Tax Excluded", value: "Tax Excluded" },
+        ]}
+        selectedItems={selected}
+        onToggle={setSelected}
+        multiSelect={true} // ⬅️ change to true for multi-select
       />
-
-      {/* Tax Included Toggle */}
-      <View style={styles.taxContainer}>
-        <ToggleButton
-          options={["Tax Excluded", "Tax Included"]}
-          onToggle={(selected) =>
-            handleChange("tax_included", selected === "Tax Included")
-          }
-          initialSelected={
-            formData.tax_included ? "Tax Included" : "Tax Excluded"
-          }
-          style={{ marginVertical: 10 }}
-        />
-      </View>
 
       {/* Tax Percentage (conditionally shown) */}
       {formData.tax_included && (
@@ -111,28 +108,6 @@ const ProductPricingForm = ({ initialData = {}, onSubmit, onBack }) => {
           rightIcon="information"
         />
       )}
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Back Button */}
-        <Button
-          title="Back"
-          onPress={onBack}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-        {/* Submit Button */}
-        <Button
-          title="Save Pricing"
-          onPress={handleSubmit}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-      </View>
     </ScrollView>
   );
 };

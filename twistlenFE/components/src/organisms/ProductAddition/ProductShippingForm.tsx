@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { View, ScrollView, StyleSheet, Text } from "react-native";
 import Input from "../../atoms/Input/Input";
-import ToggleButton from "../../atoms/ToggleButton/ToggleButton";
 import Button from "../../atoms/Button/Button";
 import CustomFormMultiCheckBox from "../../atoms/CustomFormMultiCheckBox/CustomFormMultiCheckBox";
 
 const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
-  // Form state
   const [formData, setFormData] = useState({
     sku: "",
     stock_quantity: "",
@@ -26,14 +24,28 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
     ...initialData,
   });
 
-  // Shipping options
   const shippingOptions = [
-    { id: "standard", value: "Standard" },
-    { id: "express", value: "Express" },
-    { id: "pickup", value: "Local Pickup" },
+    { id: "standard", value: "Standard", name: "Standard" },
+    { id: "express", value: "Express", name: "Express" },
+    { id: "pickup", value: "Local Pickup", name: "Local Pickup" },
   ];
 
-  // Handle input changes
+  const stockStatusOptions = [
+    { id: "in_stock", value: "in_stock", name: "In Stock" },
+    { id: "out_of_stock", value: "out_of_stock", name: "Out of Stock" },
+    { id: "pre_order", value: "pre_order", name: "Pre-order" },
+  ];
+
+  const weightUnitOptions = [
+    { id: "kg", value: "kg", name: "kg" },
+    { id: "lb", value: "lb", name: "lb" },
+  ];
+
+  const dimensionUnitOptions = [
+    { id: "cm", value: "cm", name: "cm" },
+    { id: "inch", value: "inch", name: "inch" },
+  ];
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -41,7 +53,6 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
     }));
   };
 
-  // Handle nested object changes (weight, dimensions)
   const handleNestedChange = (parentField, field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -52,28 +63,15 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
     }));
   };
 
-  // Handle shipping methods toggle
-  const handleShippingMethodToggle = (id) => {
-    setFormData((prev) => {
-      const methods = [...prev.shipping_methods];
-      const index = methods.indexOf(id);
-
-      if (index === -1) {
-        methods.push(id);
-      } else {
-        methods.splice(index, 1);
-      }
-
-      return {
-        ...prev,
-        shipping_methods: methods,
-      };
-    });
+  const handleShippingMethodToggle = (updatedItems) => {
+    const methodIds = updatedItems.map((item) => item.id);
+    setFormData((prev) => ({
+      ...prev,
+      shipping_methods: methodIds,
+    }));
   };
 
-  // Handle form submission
   const handleSubmit = () => {
-    // Convert numeric fields to numbers
     const submissionData = {
       ...formData,
       stock_quantity: Number(formData.stock_quantity),
@@ -99,7 +97,6 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
         contentContainerStyle={styles.contentContainer}
       >
         <View style={{ marginBottom: 20 }}>
-          {/* SKU */}
           <Input
             label="SKU (Stock Keeping Unit)"
             value={formData.sku}
@@ -108,7 +105,6 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
             helperText="Unique identifier for inventory tracking"
           />
 
-          {/* Stock Quantity */}
           <Input
             label="Stock Quantity"
             value={formData.stock_quantity.toString()}
@@ -121,12 +117,18 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
           />
 
           {/* Stock Status */}
-          <ToggleButton
-            options={["in_stock", "out_of_stock", "pre_order"]}
-            onToggle={(selected) => handleChange("stock_status", selected)}
-            initialSelected={formData.stock_status}
-            style={{ marginVertical: 10 }}
-            textStyle={{ fontSize: 14 }}
+          <CustomFormMultiCheckBox
+            header="Stock Status"
+            items={stockStatusOptions}
+            selectedItems={[
+              stockStatusOptions.find(
+                (opt) => opt.id === formData.stock_status
+              ),
+            ]}
+            onToggle={(selected) =>
+              handleChange("stock_status", selected[0]?.id || "")
+            }
+            multiSelect={false}
           />
 
           {/* Weight */}
@@ -149,13 +151,17 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
                 />
               </View>
               <View style={styles.unitSelector}>
-                <ToggleButton
-                  options={["kg", "lb"]}
+                <CustomFormMultiCheckBox
+                  items={weightUnitOptions}
+                  selectedItems={[
+                    weightUnitOptions.find(
+                      (opt) => opt.id === formData.weight.unit
+                    ),
+                  ]}
                   onToggle={(selected) =>
-                    handleNestedChange("weight", "unit", selected)
+                    handleNestedChange("weight", "unit", selected[0]?.id || "")
                   }
-                  initialSelected={formData.weight.unit}
-                  style={{ marginTop: 20 }}
+                  multiSelect={false}
                 />
               </View>
             </View>
@@ -211,15 +217,24 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
                 />
               </View>
             </View>
-            <View style={styles.unitSelector}>
-              <ToggleButton
-                options={["cm", "inch"]}
-                onToggle={(selected) =>
-                  handleNestedChange("dimensions", "unit", selected)
-                }
-                initialSelected={formData.dimensions.unit}
-              />
-            </View>
+
+            <CustomFormMultiCheckBox
+              header="Dimension Unit"
+              items={dimensionUnitOptions}
+              selectedItems={[
+                dimensionUnitOptions.find(
+                  (opt) => opt.id === formData.dimensions.unit
+                ),
+              ]}
+              onToggle={(selected) =>
+                handleNestedChange(
+                  "dimensions",
+                  "unit",
+                  selected[0]?.id || ""
+                )
+              }
+              multiSelect={false}
+            />
           </View>
 
           {/* Shipping Methods */}
@@ -229,6 +244,10 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
               items={shippingOptions}
               selectedItems={formData.shipping_methods.map((method) => ({
                 id: method,
+                name:
+                  shippingOptions.find((opt) => opt.id === method)?.name ||
+                  method,
+                value: method,
               }))}
               onToggle={handleShippingMethodToggle}
             />
@@ -244,28 +263,6 @@ const ProductShippingForm = ({ initialData = {}, onSubmit, onBack }) => {
           />
         </View>
       </ScrollView>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Back Button */}
-        <Button
-          title="Back"
-          onPress={onBack}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-        {/* Submit Button */}
-        <Button
-          title="Save Shipping Details"
-          onPress={handleSubmit}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-      </View>
     </View>
   );
 };

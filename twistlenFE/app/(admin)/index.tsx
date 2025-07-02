@@ -10,6 +10,7 @@ import ProductManager from "@/components/src/organisms/ProductManager/ProductMan
 import Header from "@/components/src/atoms/Header/Header";
 import Footer from "@/components/src/atoms/Footer/Footer";
 import OrderManager from "@/components/src/organisms/OrderManager/OrderManager";
+import ImageTester from "@/components/src/molecules/OfferSections/ImageTester";
 
 export default function AdminScreen() {
   const { setIsLoading, isLoading, setPages, pages } = usePageStore();

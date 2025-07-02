@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, SafeAreaView, useWindowDimensions } from "react-native";
 import React, { useState } from "react";
 import ProductContainer from "../../molecules/ProductContainer/ProductContainer";
 import ActionInput from "../../molecules/ActionInput/ActionInput";
@@ -8,8 +8,9 @@ import ProductCard from "../../molecules/ProductCard/ProductCard";
 import OfferSections from "../../molecules/OfferSections/OfferSections";
 import AffiliateCard from "../../molecules/AffiliateCard/AffiliateCard";
 
-const ProductListPage = () => {
+const ProductListPage = ({ title }) => {
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const { height, width } = useWindowDimensions();
 
   const filters = [
     { id: "1", label: "All", value: "all" },
@@ -19,44 +20,48 @@ const ProductListPage = () => {
     { id: "5", label: "Price High", value: "price_high" },
   ];
   return (
-    <View>
-      <View
-        style={{
-          $$css: true,
-          _: "mb-2",
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          // justifyContent: "center",
+          // alignItems: "center",
+          paddingHorizontal: width * 0.05, // 5% padding on sides
         }}
       >
+        <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
         <ActionInput />
-      </View>
-      <View
-        style={{
-          $$css: true,
-          _: "mb-2 w-full",
-        }}
-      >
-        <ScrollableChips
-          chips={filters}
-          selectedValue={selectedFilter}
-          onSelect={setSelectedFilter}
-          chipStyle={{ backgroundColor: "#e0e0e0" }}
-          activeChipStyle={{ backgroundColor: "#4CAF50" }}
-          textStyle={{ fontSize: 16 }}
-          activeTextStyle={{ fontWeight: "bold" }}
-        />
-      </View>
+        <View
+          style={{
+            $$css: true,
+            _: "mb-2 w-full",
+          }}
+        >
+          <ScrollableChips
+            chips={filters}
+            selectedValue={selectedFilter}
+            onSelect={setSelectedFilter}
+            chipStyle={{ backgroundColor: "#e0e0e0" }}
+            activeChipStyle={{ backgroundColor: "#4CAF50" }}
+            textStyle={{ fontSize: 16 }}
+            activeTextStyle={{ fontWeight: "bold" }}
+          />
+        </View>
 
-      <View
-        style={{
-          $$css: true,
-          _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6",
-        }}
-      >
-        <AffiliateCard />
-        <AffiliateCard />
-        <AffiliateCard />
-        <AffiliateCard />
-      </View>
-    </View>
+        <View
+          style={{
+            $$css: true,
+            _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6",
+          }}
+        >
+          <AffiliateCard />
+          <AffiliateCard />
+          <AffiliateCard />
+          <AffiliateCard />
+        </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

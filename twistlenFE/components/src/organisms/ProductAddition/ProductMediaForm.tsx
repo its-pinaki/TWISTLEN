@@ -139,28 +139,7 @@ const ProductMediaForm = ({ initialData = {}, onSubmit, onBack }) => {
           helperText="Description for your product image gallery"
         />
       </View>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Back Button */}
-        <Button
-          title="Back"
-          onPress={onBack}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-        {/* Submit Button */}
-        <Button
-          title="Save Media"
-          onPress={handleSubmit}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-      </View>
+     
     </ScrollView>
   );
 };

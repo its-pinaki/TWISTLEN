@@ -1,30 +1,64 @@
-import { usePageStore } from "@/stores/pageStores";
 import { Link } from "expo-router";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { View, Text, StyleSheet } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
-import Admin from "@/adminconfig/Admin";
-import ProductListPage from "@/components/src/organisms/ProductListPage/ProductListPage";
-import CheckOut from "@/components/src/organisms/CheckOut/CheckOut";
+import { usePageStore } from "@/stores/pageStores";
+import { componentMap } from "../../import-components";
+import { useSegments } from "expo-router";
 
-export default function OrderCheckoutScreen() {
+export default function CheckoutScreen() {
+  const { setIsLoading, isLoading, setPages, pages } = usePageStore();
+  const segments = useSegments();
+  const [selectedPageId, setSelectedPageId] = useState(null);
+  const [newPageName, setNewPageName] = useState(""); // State for page name input
+
+  const fetchPages = async () => {
+    setIsLoading({ type: "page", status: true });
+    try {
+      const response = await axios.get(`${rootUrl}/Prod/pages`);
+      setPages(response.data);
+      setIsLoading({ type: "page", status: false });
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+      setIsLoading({ type: "page", status: false });
+    }
+  };
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
+  console.log("pages", pages);
+
   return (
-    <View
-      style={{
-        $$css: true,
-        _: "flex justify-between flex-col md:flex-row",
-      }}
-    >
-      <CheckOut />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text>Hi This is AuthScreen</Text> */}
+        {pages
+          ?.find((page) => page.name === segments.join("/"))
+          ?.objects?.sort((a, b) => a.position.y - b.position.y)
+          ?.map((obj, index, arr) => {
+            const Component = componentMap[obj.type];
+            const isFirst = index === 0;
+            const isLast = index === arr.length - 1;
+            return Component ? (
+              <View
+                style={{
+                  marginVertical: isFirst || isLast ? 0 : 50,
+                }}
+                key={obj.id}
+              >
+                <Component key={obj.id} {...obj.properties} />
+              </View>
+            ) : null;
+          })}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

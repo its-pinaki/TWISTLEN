@@ -97,6 +97,32 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
+  # Table to store product details
+  ProductDetailsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ProductDetails
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  # Table to store offer details
+  OfferDetailsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: OfferDetails
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
   CommentsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -109,6 +135,63 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
+  OrdersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Orders
+      AttributeDefinitions:
+        - AttributeName: orderId
+          AttributeType: S
+        - AttributeName: sessionId  # For anonymous users
+          AttributeType: S
+        - AttributeName: userId     # For logged-in users
+          AttributeType: S
+      KeySchema:
+        - AttributeName: orderId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: SessionIdIndex
+          KeySchema:
+            - AttributeName: sessionId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+
+  CartsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Carts
+      AttributeDefinitions:
+        - AttributeName: cartId
+          AttributeType: S
+        - AttributeName: sessionId  # For anonymous users
+          AttributeType: S
+        - AttributeName: userId     # For logged-in users
+          AttributeType: S
+      KeySchema:
+        - AttributeName: cartId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: SessionIdIndex
+          KeySchema:
+            - AttributeName: sessionId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
 
   # Lambda Function(PageFunction)
   PageFunction:
@@ -316,3 +399,152 @@ Resources:
           Properties:
             Path: /comments/{commentId}
             Method: delete
+
+  # Lambda Function(ProductDetailsFunction)
+  ProductDetailsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: productHandler/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          S3_BUCKET_NAME: !Ref TwistlenS3Bucket
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: ProductDetailsTable  # Allow CRUD operations on the table
+        - DynamoDBCrudPolicy:
+            TableName: OfferDetailsTable  # Allow CRUD operations on the table
+        - S3CrudPolicy:
+            BucketName: !Ref TwistlenS3Bucket
+      Events:
+        GetProductsLists:
+          Type: Api
+          Properties:
+            Path: /products/getproductLists
+            Method: get
+        GetOffersLists:
+          Type: Api
+          Properties:
+            Path: /offers/getOfferLists
+            Method: get
+        GetProductById:
+          Type: Api
+          Properties:
+            Path: /products/getProduct
+            Method: get
+        GetOfferById:
+          Type: Api
+          Properties:
+            Path: /offers/getOffer
+            Method: get
+        PostProduct:
+          Type: Api
+          Properties:
+            Path: /products/addProduct
+            Method: post
+        PostOffer:
+          Type: Api
+          Properties:
+            Path: /offers/addOffer
+            Method: post
+        PutProduct:   
+          Type: Api
+          Properties:
+            Path: /products
+            Method: put
+        OptionsProduct:
+          Type: Api
+          Properties:
+            Path: /products
+            Method: OPTIONS
+        OptionsOffer:
+          Type: Api
+          Properties:
+            Path: /offers
+            Method: OPTIONS
+        DeleteProduct: 
+          Type: Api
+          Properties:
+            Path: /products/deleteProduct
+            Method: delete
+        DeleteOffer: 
+          Type: Api
+          Properties:
+            Path: /offers/deleteOffer
+            Method: delete
+
+  OrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: orderHandler/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ORDERS_TABLE: !Ref OrdersTable
+          PRODUCTS_TABLE: !Ref ProductDetailsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref OrdersTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProductDetailsTable
+      Events:
+        CreateOrder:
+          Type: HttpApi
+          Properties:
+            Path: /orders
+            Method: post
+        GetOrder:
+          Type: HttpApi
+          Properties:
+            Path: /orders/{orderId}
+            Method: get
+        GetUserOrders:
+          Type: HttpApi
+          Properties:
+            Path: /users/orders
+            Method: get
+        GetSessionOrders:
+          Type: HttpApi
+          Properties:
+            Path: /session/orders
+            Method: get
+
+  CartFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: cartHandler/
+      Handler: app.lambdaHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          CARTS_TABLE: !Ref CartsTable
+          PRODUCTS_TABLE: !Ref ProductDetailsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CartsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProductDetailsTable
+      Events:
+        GetCart:
+          Type: HttpApi
+          Properties:
+            Path: /cart
+            Method: get
+        ManageCart:
+          Type: HttpApi
+          Properties:
+            Path: /cart/items
+            Method: ANY
+        TransferCart:
+          Type: HttpApi
+          Properties:
+            Path: /cart/transfer
+            Method: post

@@ -1,77 +1,63 @@
-import { usePageStore } from "@/stores/pageStores";
 import { Link } from "expo-router";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { View, Text, StyleSheet, Animated, ScrollView } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
-import ProfilePage from "@/components/src/organisms/ProfilePage/ProfilePage";
-import Footer from "@/components/src/atoms/Footer/Footer";
-import Header from "@/components/src/atoms/Header/Header";
+import { usePageStore } from "@/stores/pageStores";
+import { componentMap } from "../import-components";
+import { useSegments } from 'expo-router';
 
 export default function ProfileScreen() {
+  const { setIsLoading, isLoading, setPages, pages } = usePageStore();
+  const segments = useSegments();
+  const [selectedPageId, setSelectedPageId] = useState(null);
+  const [newPageName, setNewPageName] = useState(""); // State for page name input
+
+  const fetchPages = async () => {
+    setIsLoading({ type: "page", status: true });
+    try {
+      const response = await axios.get(`${rootUrl}/Prod/pages`);
+      setPages(response.data);
+      setIsLoading({ type: "page", status: false });
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+      setIsLoading({ type: "page", status: false });
+    }
+  };
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
+  console.log("pages", pages);
+
   return (
-    <View style={{ flex: 1 }}>
-      {/* Fixed Header */}
-      <View
-        style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 10 }}
-      >
-        <Header />
-      </View>
-
-      {/* Scrollable Content */}
-      <ScrollView
-        showsVerticalScrollIndicator={false} // Hide default indicator
-        contentContainerStyle={{
-          flexGrow: 1,
-          marginTop: -50,
-          // paddingTop: 80, // Adjust this value based on your header height
-        }}
-        // Custom scroll indicator container
-        scrollIndicatorInsets={{ right: 1 }} // Small margin from right edge
-      >
-        {/* Custom scroll indicator implementation */}
-        <View
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text>Hi This is AuthScreen</Text> */}
+        {pages
+          ?.find((page) => page.name === segments.join('/'))
+          ?.objects?.sort((a, b) => a.position.y - b.position.y)?.map((obj, index, arr) => {
+            const Component = componentMap[obj.type];
+            const isFirst = index === 0;
+            const isLast = index === arr.length - 1;
+            return Component ? (
+              <View
           style={{
-            position: "absolute",
-            right: 0,
-            bottom: 0,
-            width: 4,
-            zIndex: 20,
+            marginVertical: isFirst || isLast ? 0 : 50,
           }}
-        >
-          <Animated.View
-            style={{
-              height: "100%",
-              width: 10,
-              backgroundColor: "rgba(0,0,0,0.5)", // Grey track
-              borderRadius: 10,
-              overflow: "hidden",
-            }}
-          >
-            <Animated.View
-              style={{
-                width: 4,
-                backgroundColor: "#000", // Black thumb
-                borderRadius: 2,
-              }}
-            />
-          </Animated.View>
-        </View>
-
-        <View style={{ transform: [{ scale: 0.8 }] }}>
-          <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
-            <ProfilePage />
-          </View>
-        </View>
-
-        <Footer />
-      </ScrollView>
-    </View>
+          key={obj.id}
+              >
+          <Component key={obj.id} {...obj.properties} />
+              </View>
+            ) : null;
+          })}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    flex: 1,
   },
 });

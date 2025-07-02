@@ -1,31 +1,65 @@
-import { useLocalSearchParams } from "expo-router";
-import { Text, View, ScrollView } from "react-native";
-import ProductCard from "@/components/src/molecules/ProductCard/ProductCard";
-import AffiliateCard from "@/components/src/molecules/AffiliateCard/AffiliateCard";
+import { Link } from "expo-router";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import AuthForm from "@/components/src/organisms/AuthForm/AuthForm";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { rootUrl } from "@/constants/endPoints";
+import { usePageStore } from "@/stores/pageStores";
+import { componentMap } from "../../import-components";
+import { useSegments } from "expo-router";
 
-const ProductListScreen = () => {
-  const { productId, ref, refv1 } = useLocalSearchParams();
+export default function ProductScreen() {
+  const { setIsLoading, isLoading, setPages, pages } = usePageStore();
+  const segments = useSegments();
+  const [selectedPageId, setSelectedPageId] = useState(null);
+  const [newPageName, setNewPageName] = useState(""); // State for page name input
+
+  const fetchPages = async () => {
+    setIsLoading({ type: "page", status: true });
+    try {
+      const response = await axios.get(`${rootUrl}/Prod/pages`);
+      setPages(response.data);
+      setIsLoading({ type: "page", status: false });
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+      setIsLoading({ type: "page", status: false });
+    }
+  };
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
+  console.log("pages", pages);
 
   return (
-    <View style={{ $$css: true, _: "flex-1" }}>
-      <ScrollView contentContainerStyle={{ paddingVertical: 20 }}>
-        {/* Outer container with max-width */}
-        <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
-          <View
-            style={{
-              $$css: true,
-              _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6",
-            }}
-          >
-            <AffiliateCard />
-            <AffiliateCard />
-            <AffiliateCard />
-            <AffiliateCard />
-          </View>
-        </View>
-      </ScrollView>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text>Hi This is AuthScreen</Text> */}
+        {pages
+          ?.find((page) => page.name === segments.join("/"))
+          ?.objects?.sort((a, b) => a.position.y - b.position.y)
+          ?.map((obj, index, arr) => {
+            const Component = componentMap[obj.type];
+            const isFirst = index === 0;
+            const isLast = index === arr.length - 1;
+            return Component ? (
+              <View
+                style={{
+                  marginVertical: isFirst || isLast ? 0 : 50,
+                }}
+                key={obj.id}
+              >
+                <Component key={obj.id} {...obj.properties} />
+              </View>
+            ) : null;
+          })}
+      </View>
+    </ScrollView>
   );
-};
+}
 
-export default ProductListScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

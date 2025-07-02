@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, FlatList,ScrollView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import ComponentDropDown from "./ComponentDropDown";
 import CustomDropDownStyles from "./CustomDropDown.styles";
+import Typography from "../Typography/Typography";
 
 interface CustomDropDownProps {
   value: any[];
@@ -17,6 +24,7 @@ interface CustomDropDownProps {
   texttype: string;
   searchPlaceholder: string;
   bordercolor?: string;
+  title?: string;
 }
 
 const CustomDropDown: React.FC<CustomDropDownProps> = ({
@@ -32,6 +40,7 @@ const CustomDropDown: React.FC<CustomDropDownProps> = ({
   texttype,
   searchPlaceholder,
   bordercolor,
+  title,
 }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -45,12 +54,14 @@ const CustomDropDown: React.FC<CustomDropDownProps> = ({
   };
 
   const handleRemoveItem = (itemId: string) => {
-    setSelectedItems(selectedItems?.filter((item) => item[uniqueKey] !== itemId));
+    setSelectedItems(
+      selectedItems?.filter((item) => item[uniqueKey] !== itemId)
+    );
   };
 
   const renderSelectedItems = () => {
     if (selectedItems.length === 0) return null;
-  
+
     return (
       <ScrollView
         horizontal
@@ -70,38 +81,67 @@ const CustomDropDown: React.FC<CustomDropDownProps> = ({
   };
 
   return (
-    <View style={[CustomDropDownStyles.container, { borderColor: bordercolor || "#ddd", borderWidth: 1, borderRadius: 8, padding: 10 }]}> 
-      <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)} style={CustomDropDownStyles.button}>
-        <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-          <Text style={{marginRight: 10, fontSize: 16, color: "#333"}}>
-            {single
-              ? selectedItems?.length > 0
-                ? selectedItems[0][displayName]
-                : `${texttype}`
-              : selectedItems?.length > 0
-              ? `Selected (${selectedItems?.length})`
-              : `Select ${texttype}`}
-          </Text>
-          <AntDesign name={dropdownVisible ? "caretup" : "caretdown"} size={18} color="#666" />
-        </View>
-      </TouchableOpacity>
-      {!dropdownVisible && !single && renderSelectedItems()}
-      {dropdownVisible && (
-        <View style={CustomDropDownStyles.dropdownContainer}>
-          <ComponentDropDown
-            data={value}
-            onSelect={handleSelect}
-            selectedItems={selectedItems}
-            isVisible={dropdownVisible}
-            onClose={handleClose}
-            displayName={displayName}
-            single={single}
-            uniqueKey={uniqueKey}
-            searchPlaceholder={searchPlaceholder}
-          />
-        </View>
-      )}
-      {isError && <Text style={{ color: "red", marginTop: 5 }}>{errorMsg}</Text>}
+    <View>
+      <Typography text={title} />
+
+      <View
+        style={[
+          CustomDropDownStyles.container,
+          {
+            borderColor: bordercolor || "#ddd",
+            borderWidth: 1,
+            borderRadius: 8,
+            padding: 10,
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => setDropdownVisible(!dropdownVisible)}
+          style={CustomDropDownStyles.button}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ marginRight: 10, fontSize: 16, color: "#333" }}>
+              {single
+                ? selectedItems?.length > 0
+                  ? selectedItems[0][displayName]
+                  : `${texttype}`
+                : selectedItems?.length > 0
+                ? `Selected (${selectedItems?.length})`
+                : `Select ${texttype}`}
+            </Text>
+            <AntDesign
+              name={dropdownVisible ? "caretup" : "caretdown"}
+              size={18}
+              color="#666"
+            />
+          </View>
+        </TouchableOpacity>
+        {!dropdownVisible && !single && renderSelectedItems()}
+        {dropdownVisible && (
+          <View style={CustomDropDownStyles.dropdownContainer}>
+            <ComponentDropDown
+              data={value}
+              onSelect={handleSelect}
+              selectedItems={selectedItems}
+              isVisible={dropdownVisible}
+              onClose={handleClose}
+              displayName={displayName}
+              single={single}
+              uniqueKey={uniqueKey}
+              searchPlaceholder={searchPlaceholder}
+            />
+          </View>
+        )}
+        {isError && (
+          <Text style={{ color: "red", marginTop: 5 }}>{errorMsg}</Text>
+        )}
+      </View>
     </View>
   );
 };

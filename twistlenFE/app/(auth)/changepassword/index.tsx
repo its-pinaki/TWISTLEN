@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { rootUrl } from "@/constants/endPoints";
 import { usePageStore } from "@/stores/pageStores";
-import { componentMap } from "../import-components";
+import { componentMap } from "../../import-components";
+import { useSegments } from 'expo-router';
 
-export default function AuthScreen() {
+export default function ChangePasswordScreen() {
   const { setIsLoading, isLoading, setPages, pages } = usePageStore();
+  const segments = useSegments();
   const [selectedPageId, setSelectedPageId] = useState(null);
   const [newPageName, setNewPageName] = useState(""); // State for page name input
 
@@ -34,8 +36,8 @@ export default function AuthScreen() {
       <View style={styles.container}>
         {/* <Text>Hi This is AuthScreen</Text> */}
         {pages
-          ?.find((page) => page.name === "Home")
-          ?.objects?.map((obj, index, arr) => {
+          ?.find((page) => page.name === segments.join('/'))
+          ?.objects?.sort((a, b) => a.position.y - b.position.y)?.map((obj, index, arr) => {
             const Component = componentMap[obj.type];
             const isFirst = index === 0;
             const isLast = index === arr.length - 1;

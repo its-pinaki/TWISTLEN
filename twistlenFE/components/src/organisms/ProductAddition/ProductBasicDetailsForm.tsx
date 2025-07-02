@@ -5,6 +5,7 @@ import ToggleButton from "../../atoms/ToggleButton/ToggleButton";
 import CustomDropDown from "../../atoms/CustomDropDown/CustomDropDown";
 import CustomFormMultiCheckBox from "../../atoms/CustomFormMultiCheckBox/CustomFormMultiCheckBox";
 import Button from "../../atoms/Button/Button";
+import TagInput from "../../atoms/TagInput/TagInput";
 
 const ProductBasicDetailsForm = ({ initialData = {}, onSubmit }) => {
   // Form state
@@ -42,12 +43,20 @@ const ProductBasicDetailsForm = ({ initialData = {}, onSubmit }) => {
     { id: "4", name: "Adidas" },
   ]);
 
-  const [tags, setTags] = useState([
-    { id: "1", name: "New" },
-    { id: "2", name: "Popular" },
-    { id: "3", name: "Sale" },
-    { id: "4", name: "Limited Edition" },
-  ]);
+  const [selected, setSelected] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  // Handler for checkbox toggle
+  const handleToggle = (id, value) => {
+    setSelectedTags((prev) => {
+      // If item already selected, remove it
+      if (prev.some((item) => item.id === id)) {
+        return prev.filter((item) => item.id !== id);
+      }
+      // Otherwise add it
+      return [...prev, { id, value }];
+    });
+  };
 
   // Filter subcategories based on selected category
   const filteredSubCategories = subCategories.filter(
@@ -88,126 +97,113 @@ const ProductBasicDetailsForm = ({ initialData = {}, onSubmit }) => {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <View style={{ marginBottom: 20 }}>
-        {/* Title */}
-        <Input
-          label="Product Title"
-          value={formData.title}
-          onChangeText={(text) => handleChange("title", text)}
-          placeholder="Enter product title"
-          helperText="This will be displayed as the product name"
-        />
-
-        {/* Slug */}
-        <Input
-          label="Product Slug"
-          value={formData.slug}
-          onChangeText={(text) => handleChange("slug", text)}
-          placeholder="product-url-identifier"
-          helperText="URL-friendly identifier for the product"
-          leftIcon="link"
-        />
-
-        {/* Description */}
-        <Input
-          label="Description"
-          value={formData.description}
-          onChangeText={(text) => handleChange("description", text)}
-          placeholder="Enter detailed product description"
-          multiline
-          numberOfLines={4}
-          inputStyle={{ height: 100 }}
-        />
-
-        {/* Category Dropdown */}
-        <CustomDropDown
-          value={categories}
-          onSelect={(selected) => handleChange("category", selected[0])}
-          uniqueKey="id"
-          displayName="name"
-          selectedItems={formData.category ? [formData.category] : []}
-          single={true}
-          setSelectedItems={(selected) => handleChange("category", selected[0])}
-          texttype="Category"
-          searchPlaceholder="Search categories..."
-          isError={false}
-        />
-
-        {/* Sub-Category Dropdown */}
-        {formData.category && (
-          <CustomDropDown
-            value={filteredSubCategories}
-            onSelect={(selected) => handleChange("sub_category", selected[0])}
-            uniqueKey="id"
-            displayName="name"
-            selectedItems={formData.sub_category ? [formData.sub_category] : []}
-            single={true}
-            setSelectedItems={(selected) =>
-              handleChange("sub_category", selected[0])
-            }
-            texttype="Sub-Category"
-            searchPlaceholder="Search sub-categories..."
-            isError={false}
+    <View>
+      <ScrollView
+        // style={styles.scrollView}
+        // contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ marginBottom: 20 }}>
+          {/* Title */}
+          <Input
+            label="Product Title"
+            value={formData.title}
+            onChangeText={(text) => handleChange("title", text)}
+            placeholder="Enter product title"
+            helperText="This will be displayed as the product name"
           />
-        )}
 
-        {/* Brand Dropdown */}
-        <CustomDropDown
-          value={brands}
-          onSelect={(selected) => handleChange("brand", selected[0])}
-          uniqueKey="id"
-          displayName="name"
-          selectedItems={formData.brand ? [formData.brand] : []}
-          single={true}
-          setSelectedItems={(selected) => handleChange("brand", selected[0])}
-          texttype="Brand"
-          searchPlaceholder="Search brands..."
-          isError={false}
-        />
-
-        {/* Tags Multi-Select */}
-        <CustomFormMultiCheckBox
-          items={tags}
-          header="Tags"
-          selectedItems={formData.tags}
-          onToggle={(id) => {
-            const selectedTag = tags.find((tag) => tag.id === id);
-            const isSelected = formData.tags.some((tag) => tag.id === id);
-
-            if (isSelected) {
-              handleChange(
-                "tags",
-                formData.tags.filter((tag) => tag.id !== id)
-              );
-            } else {
-              handleChange("tags", [...formData.tags, selectedTag]);
-            }
-          }}
-        />
-
-        {/* Status Toggle */}
-        <ToggleButton
-          options={["draft", "published", "archived"]}
-          onToggle={(selected) => handleChange("status", selected)}
-          initialSelected={formData.status}
-          style={{ marginVertical: 15 }}
-        />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-    
-          {/* Submit Button */}
-          <Button
-            title="Save Product"
-            onPress={handleSubmit}
-            mode="contained"
-            style={{ marginTop: 20 }}
+          {/* Slug */}
+          <Input
+            label="Product Slug"
+            value={formData.slug}
+            onChangeText={(text) => handleChange("slug", text)}
+            placeholder="product-url-identifier"
+            helperText="URL-friendly identifier for the product"
+            leftIcon="link"
           />
+
+          {/* Description */}
+          <Input
+            label="Description"
+            value={formData.description}
+            onChangeText={(text) => handleChange("description", text)}
+            placeholder="Enter detailed product description"
+            multiline
+            numberOfLines={4}
+            inputStyle={{ height: 100 }}
+          />
+          <View
+            style={{
+              $$css: true,
+              _: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5",
+            }}
+          >
+            {/* Category Dropdown */}
+            <CustomDropDown
+              value={categories}
+              onSelect={(selected) => handleChange("category", selected[0])}
+              uniqueKey="id"
+              displayName="name"
+              selectedItems={formData.category ? [formData.category] : []}
+              single={true}
+              setSelectedItems={(selected) =>
+                handleChange("category", selected[0])
+              }
+              texttype="Category"
+              searchPlaceholder="Search categories..."
+              isError={false}
+              title="Select Category"
+            />
+
+            {/* Sub-Category Dropdown */}
+            {formData.category && (
+              <CustomDropDown
+                value={filteredSubCategories}
+                onSelect={(selected) =>
+                  handleChange("sub_category", selected[0])
+                }
+                uniqueKey="id"
+                displayName="name"
+                selectedItems={
+                  formData.sub_category ? [formData.sub_category] : []
+                }
+                single={true}
+                setSelectedItems={(selected) =>
+                  handleChange("sub_category", selected[0])
+                }
+                texttype="Sub-Category"
+                searchPlaceholder="Search sub-categories..."
+                isError={false}
+                title="Select SubCategory"
+              />
+            )}
+          </View>
+
+          {/* Tags Multi-Select */}
+          <View
+            style={{
+              $$css: true,
+              _: "my-2",
+            }}
+          >
+            <CustomFormMultiCheckBox
+              items={[
+                { id: 1, name: "Drafted", value: "Drafted" },
+                { id: 2, name: "Published", value: "Published" },
+                { id: 3, name: "Archieved", value: "Archieved" },
+              ]}
+              selectedItems={selected}
+              onToggle={setSelected}
+              multiSelect={true} // ⬅️ change to true for multi-select
+            />
+          </View>
+
+          <TagInput onTagsChange={(tags) => console.log(tags)} />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 

@@ -8,10 +8,10 @@ export default function HomeScreen() {
   useEffect(() => {
     // Using setTimeout to ensure the redirect happens after the component mounts
     const timer = setTimeout(() => {
-      // router.replace("/(admin)");
+      router.replace("/(admin)");
       // router.replace("/(tools)?tool=StartupIdeaGenerator");
       // router.replace("/(plp)");
-      router.replace("/(profile)");
+      // router.replace("/(profile)");
     }, 0);
 
     return () => clearTimeout(timer);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   ScrollView,
@@ -8,15 +8,27 @@ import {
   TouchableOpacity,
   Image,
   useWindowDimensions,
-} from 'react-native';
-import DatePicker from 'react-native-datepicker';
+  SafeAreaView,
+} from "react-native";
 
-export default function Checkout() {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('Cash');
+const Checkout = ({ title }) => {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [cartItems, setCartItems] = useState([
-    { id: 1, title: 'Product Title', description: 'Product Description', price: 250, quantity: 1 },
-    { id: 2, title: 'Product Title', description: 'Product Description', price: 250, quantity: 1 },
+    {
+      id: 1,
+      title: "Product Title",
+      description: "Product Description",
+      price: 250,
+      quantity: 1,
+    },
+    {
+      id: 2,
+      title: "Product Title",
+      description: "Product Description",
+      price: 250,
+      quantity: 1,
+    },
   ]);
 
   const { width } = useWindowDimensions();
@@ -32,31 +44,60 @@ export default function Checkout() {
     );
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const gst = 100;
   const delivery = 100;
   const grandTotal = subtotal + gst + delivery;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Checkout</Text>
-      <View style={[styles.mainContent, { flexDirection: isWide ? 'row' : 'column' }]}>
-        {/* Left Column: Form */}
-        <View style={[styles.column, { marginRight: isWide ? 12 : 0 }]}>
-          {/* Delivery Info */}
-          <View style={styles.section}>
-            <Text style={styles.subHeader}>Delivery Information</Text>
-            {['First Name', 'Last Name', 'Email', 'Phone', 'Country', 'State', 'City', 'Zip Code', 'Address'].map(
-              (placeholder) => (
-                <TextInput key={placeholder} style={styles.input} placeholder={placeholder} />
-              )
-            )}
-          </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          // justifyContent: "center",
+          // alignItems: "center",
+          paddingHorizontal: width * 0.05, // 5% padding on sides
+        }}
+      >
+        <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
+          <Text style={styles.header}>Checkout</Text>
+          <View
+            style={[
+              styles.mainContent,
+              { flexDirection: isWide ? "row" : "column" },
+            ]}
+          >
+            {/* Left Column: Form */}
+            <View style={[styles.column, { marginRight: isWide ? 12 : 0 }]}>
+              {/* Delivery Info */}
+              <View style={styles.section}>
+                <Text style={styles.subHeader}>Delivery Information</Text>
+                {[
+                  "First Name",
+                  "Last Name",
+                  "Email",
+                  "Phone",
+                  "Country",
+                  "State",
+                  "City",
+                  "Zip Code",
+                  "Address",
+                ].map((placeholder) => (
+                  <TextInput
+                    key={placeholder}
+                    style={styles.input}
+                    placeholder={placeholder}
+                  />
+                ))}
+              </View>
 
-          {/* Schedule Delivery */}
-          <View style={styles.section}>
-            <Text style={styles.subHeader}>Schedule Delivery</Text>
-            {/* <DatePicker
+              {/* Schedule Delivery */}
+              <View style={styles.section}>
+                <Text style={styles.subHeader}>Schedule Delivery</Text>
+                {/* <DatePicker
               style={{ width: '100%' }}
               date={selectedDate}
               mode="date"
@@ -69,83 +110,110 @@ export default function Checkout() {
                 dateInput: styles.dateInput,
               }}
             /> */}
-          </View>
+              </View>
 
-          {/* Payment Methods */}
-          <View style={styles.section}>
-            <Text style={styles.subHeader}>Payment Methods</Text>
-            {['Cash on Delivery', 'Online Payment', 'POS on Delivery'].map((method) => (
-              <TouchableOpacity
-                key={method}
-                onPress={() => setPaymentMethod(method)}
-                style={styles.radioContainer}
-              >
-                <View style={[styles.radio, paymentMethod === method && styles.radioSelected]} />
-                <Text>{method}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+              {/* Payment Methods */}
+              <View style={styles.section}>
+                <Text style={styles.subHeader}>Payment Methods</Text>
+                {["Cash on Delivery", "Online Payment", "POS on Delivery"].map(
+                  (method) => (
+                    <TouchableOpacity
+                      key={method}
+                      onPress={() => setPaymentMethod(method)}
+                      style={styles.radioContainer}
+                    >
+                      <View
+                        style={[
+                          styles.radio,
+                          paymentMethod === method && styles.radioSelected,
+                        ]}
+                      />
+                      <Text>{method}</Text>
+                    </TouchableOpacity>
+                  )
+                )}
+              </View>
+            </View>
 
-        {/* Right Column: Order Summary */}
-        <View style={styles.column}>
-          <View style={styles.section}>
-            <Text style={styles.subHeader}>Order Summary</Text>
-            {cartItems.map((item) => (
-              <View key={item.id} style={styles.orderItem}>
-                <Image
-                  source={{ uri: 'https://via.placeholder.com/60' }}
-                  style={styles.productImage}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text>{item.title}</Text>
-                  <Text>{item.description}</Text>
-                  <Text>₹ {item.price}</Text>
+            {/* Right Column: Order Summary */}
+            <View style={styles.column}>
+              <View style={styles.section}>
+                <Text style={styles.subHeader}>Order Summary</Text>
+                {cartItems.map((item) => (
+                  <View key={item.id} style={styles.orderItem}>
+                    <Image
+                      source={{ uri: "https://via.placeholder.com/60" }}
+                      style={styles.productImage}
+                    />
+                    <View style={{ flex: 1 }}>
+                      <Text>{item.title}</Text>
+                      <Text>{item.description}</Text>
+                      <Text>₹ {item.price}</Text>
+                    </View>
+                    <View style={styles.qtyControl}>
+                      <TouchableOpacity
+                        onPress={() => updateQuantity(item.id, -1)}
+                        style={styles.qtyButton}
+                      >
+                        <Text>-</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.qtyText}>{item.quantity}</Text>
+                      <TouchableOpacity
+                        onPress={() => updateQuantity(item.id, 1)}
+                        style={styles.qtyButton}
+                      >
+                        <Text>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+                <View style={styles.priceRow}>
+                  <Text>Subtotal</Text>
+                  <Text>₹ {subtotal}</Text>
                 </View>
-                <View style={styles.qtyControl}>
-                  <TouchableOpacity onPress={() => updateQuantity(item.id, -1)} style={styles.qtyButton}>
-                    <Text>-</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.qtyText}>{item.quantity}</Text>
-                  <TouchableOpacity onPress={() => updateQuantity(item.id, 1)} style={styles.qtyButton}>
-                    <Text>+</Text>
-                  </TouchableOpacity>
+                <View style={styles.priceRow}>
+                  <Text>GST</Text>
+                  <Text>₹ {gst}</Text>
+                </View>
+                <View style={styles.priceRow}>
+                  <Text>Delivery Charge</Text>
+                  <Text>₹ {delivery}</Text>
+                </View>
+                <View style={styles.priceRow}>
+                  <Text style={styles.total}>Grand Total</Text>
+                  <Text style={styles.total}>₹ {grandTotal}</Text>
                 </View>
               </View>
-            ))}
-            <View style={styles.priceRow}><Text>Subtotal</Text><Text>₹ {subtotal}</Text></View>
-            <View style={styles.priceRow}><Text>GST</Text><Text>₹ {gst}</Text></View>
-            <View style={styles.priceRow}><Text>Delivery Charge</Text><Text>₹ {delivery}</Text></View>
-            <View style={styles.priceRow}><Text style={styles.total}>Grand Total</Text><Text style={styles.total}>₹ {grandTotal}</Text></View>
-          </View>
 
-          {/* Buttons */}
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.confirmButton}>
-              <Text style={styles.buttonText}>Confirm Order</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelButton}>
-              <Text style={styles.buttonText}>Cancel</Text>
-            </TouchableOpacity>
+              {/* Buttons */}
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.confirmButton}>
+                  <Text style={styles.buttonText}>Confirm Order</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.cancelButton}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 16,
   },
   mainContent: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   column: {
     flex: 1,
@@ -156,25 +224,25 @@ const styles = StyleSheet.create({
   subHeader: {
     fontSize: 18,
     marginBottom: 10,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
   },
   dateInput: {
     borderRadius: 8,
-    borderColor: '#ccc',
-    alignItems: 'flex-start',
+    borderColor: "#ccc",
+    alignItems: "flex-start",
     paddingLeft: 10,
     height: 44,
   },
   radioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
   },
   radio: {
@@ -182,16 +250,16 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: "#333",
     marginRight: 10,
   },
   radioSelected: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
   },
   orderItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   productImage: {
     width: 60,
@@ -200,48 +268,51 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   qtyControl: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   qtyButton: {
     borderWidth: 1,
-    borderColor: '#aaa',
+    borderColor: "#aaa",
     borderRadius: 4,
     padding: 4,
     marginHorizontal: 4,
   },
   qtyText: {
     minWidth: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   priceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 4,
   },
   total: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 16,
   },
   confirmButton: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     padding: 12,
     borderRadius: 8,
     flex: 1,
     marginRight: 8,
   },
   cancelButton: {
-    backgroundColor: '#aaa',
+    backgroundColor: "#aaa",
     padding: 12,
     borderRadius: 8,
     flex: 1,
   },
   buttonText: {
-    color: '#fff',
-    textAlign: 'center',
+    color: "#fff",
+    textAlign: "center",
   },
 });
+
+export default Checkout;
+// This code defines a Checkout component that displays a checkout form with delivery information, payment methods, and an order summary.

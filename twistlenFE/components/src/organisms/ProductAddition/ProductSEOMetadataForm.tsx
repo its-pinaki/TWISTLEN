@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet, TextInput, Text } from "react-native";
 import Input from "../../atoms/Input/Input";
 import Button from "../../atoms/Button/Button";
 import CustomFormMultiCheckBox from "../../atoms/CustomFormMultiCheckBox/CustomFormMultiCheckBox";
+import TagInput from "../../atoms/TagInput/TagInput";
 
 const ProductSEOMetadataForm = ({ initialData = {}, onSubmit, onBack }) => {
   // Form state
@@ -22,13 +23,12 @@ const ProductSEOMetadataForm = ({ initialData = {}, onSubmit, onBack }) => {
 
   // Common keywords suggestions
   const keywordSuggestions = [
-    { id: "1", value: "premium" },
-    { id: "2", value: "quality" },
-    { id: "3", value: "affordable" },
-    { id: "4", value: "durable" },
-    { id: "5", value: "eco-friendly" },
+    { id: "1", name: "premium", value: "premium" },
+    { id: "2", name: "quality", value: "quality" },
+    { id: "3", name: "affordable", value: "affordable" },
+    { id: "4", name: "durable", value: "durable" },
+    { id: "5", name: "eco-friendly", value: "eco-friendly" },
   ];
-
   // Handle input changes
   const handleChange = (field, value) => {
     setFormData((prev) => ({
@@ -38,25 +38,12 @@ const ProductSEOMetadataForm = ({ initialData = {}, onSubmit, onBack }) => {
   };
 
   // Handle keywords toggle
-  const handleKeywordToggle = (id) => {
-    const keyword = keywordSuggestions.find((k) => k.id === id)?.value;
-    if (!keyword) return;
-
-    setFormData((prev) => {
-      const keywords = [...prev.meta_keywords];
-      const index = keywords.indexOf(keyword);
-
-      if (index === -1) {
-        keywords.push(keyword);
-      } else {
-        keywords.splice(index, 1);
-      }
-
-      return {
-        ...prev,
-        meta_keywords: keywords,
-      };
-    });
+  const handleKeywordToggle = (selectedItems) => {
+    const selectedKeywords = selectedItems.map((item) => item.value);
+    setFormData((prev) => ({
+      ...prev,
+      meta_keywords: selectedKeywords,
+    }));
   };
 
   // Handle custom field changes
@@ -133,14 +120,14 @@ const ProductSEOMetadataForm = ({ initialData = {}, onSubmit, onBack }) => {
 
         <CustomFormMultiCheckBox
           items={keywordSuggestions}
-          selectedItems={formData.meta_keywords.map((kw) => ({
-            id: keywordSuggestions.find((k) => k.value === kw)?.id || "",
-          }))}
+          selectedItems={keywordSuggestions.filter((item) =>
+            formData.meta_keywords.includes(item.value)
+          )}
           onToggle={handleKeywordToggle}
         />
 
         {/* Custom Keywords Input */}
-        <Input
+        {/* <Input
           label="Add Custom Keywords"
           value={formData.meta_keywords.join(", ")}
           onChangeText={(text) =>
@@ -151,7 +138,8 @@ const ProductSEOMetadataForm = ({ initialData = {}, onSubmit, onBack }) => {
           }
           placeholder="keyword1, keyword2, keyword3"
           helperText="Separate multiple keywords with commas"
-        />
+        /> */}
+        <TagInput onTagsChange={(tags) => console.log(tags)} />
       </View>
 
       {/* Custom Fields */}
@@ -200,28 +188,6 @@ const ProductSEOMetadataForm = ({ initialData = {}, onSubmit, onBack }) => {
             />
           </View>
         ))}
-      </View>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Back Button */}
-        <Button
-          title="Back"
-          onPress={onBack}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
-        {/* Submit Button */}
-        <Button
-          title="Save SEO Metadata"
-          onPress={handleSubmit}
-          mode="contained"
-          style={{ marginTop: 20 }}
-        />
       </View>
     </ScrollView>
   );

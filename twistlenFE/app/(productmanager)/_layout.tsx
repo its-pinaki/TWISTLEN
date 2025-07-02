@@ -11,6 +11,7 @@ export default function ProductManagerLayout() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        headerShown: false,
       }}
     >
       <Stack.Screen name="index"  />

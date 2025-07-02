@@ -1,5 +1,14 @@
-import { useLocalSearchParams } from "expo-router";
-import { Text, View, ScrollView, SafeAreaView, Animated } from "react-native";
+// const { productId, ref, refv1 } = useLocalSearchParams();
+
+import { useLocalSearchParams, useSegments } from "expo-router";
+import {
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  Animated,
+  StyleSheet,
+} from "react-native";
 import ProductCard from "@/components/src/molecules/ProductCard/ProductCard";
 import OfferSections from "@/components/src/molecules/OfferSections/OfferSections";
 import ThreadedDiscussion from "@/components/src/molecules/DiscussionThreads/ThreadedDiscussion";
@@ -7,69 +16,66 @@ import { CommentType } from "@/components/src/molecules/DiscussionThreads/types"
 import Header from "@/components/src/atoms/Header/Header";
 import Footer from "@/components/src/atoms/Footer/Footer";
 import ProductDetails from "@/components/src/organisms/ProductDetails/ProductDetails";
+import { usePageStore } from "@/stores/pageStores";
+import axios from "axios";
+import { rootUrl } from "@/constants/endPoints";
+import { useEffect } from "react";
+import { componentMap } from "@/app/import-components";
 
 const ProductScreen = () => {
+  const { setIsLoading, isLoading, setPages, pages } = usePageStore();
+  const segments = useSegments();
   const { productId, ref, refv1 } = useLocalSearchParams();
+  const fetchPages = async () => {
+    setIsLoading({ type: "page", status: true });
+    try {
+      const response = await axios.get(`${rootUrl}/Prod/pages`);
+      setPages(response.data);
+      setIsLoading({ type: "page", status: false });
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+      setIsLoading({ type: "page", status: false });
+    }
+  };
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
+  console.log("pages", pages);
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* Fixed Header */}
-      <View
-        style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 10 }}
-      >
-        <Header />
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text>Hi This is AuthScreen</Text> */}
+        {pages
+          ?.find((page) => /^\(product\)\/products\/[^/]+$/.test(page.name))
+          ?.objects?.sort((a, b) => a.position.y - b.position.y)
+          ?.map((obj, index, arr) => {
+            const Component = componentMap[obj.type];
+            const isFirst = index === 0;
+            const isLast = index === arr.length - 1;
+            return Component ? (
+              <View
+                style={
+                  {
+                    // marginVertical: isFirst || isLast ? 0 : 50,
+                  }
+                }
+                key={obj.id}
+              >
+                <Component key={obj.id} {...obj.properties} />
+              </View>
+            ) : null;
+          })}
       </View>
-
-      {/* Scrollable Content */}
-      <ScrollView
-        showsVerticalScrollIndicator={false} // Hide default indicator
-        contentContainerStyle={{
-          flexGrow: 1,
-          marginTop: 30,
-          // paddingTop: 80, // Adjust this value based on your header height
-        }}
-        // Custom scroll indicator container
-        scrollIndicatorInsets={{ right: 1 }} // Small margin from right edge
-      >
-        {/* Custom scroll indicator implementation */}
-        <View
-          style={{
-            position: "absolute",
-            right: 0,
-            bottom: 0,
-            width: 4,
-            zIndex: 20,
-          }}
-        >
-          <Animated.View
-            style={{
-              height: "100%",
-              width: 10,
-              backgroundColor: "rgba(0,0,0,0.5)", // Grey track
-              borderRadius: 10,
-              overflow: "hidden",
-            }}
-          >
-            <Animated.View
-              style={{
-                width: 4,
-                backgroundColor: "#000", // Black thumb
-                borderRadius: 2,
-              }}
-            />
-          </Animated.View>
-        </View>
-
-        <View style={{ transform: [{ scale: 1 }] }}>
-          <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto" }}>
-            <ProductDetails />
-          </View>
-        </View>
-
-        <Footer />
-      </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default ProductScreen;

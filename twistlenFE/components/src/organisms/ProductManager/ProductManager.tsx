@@ -15,6 +15,7 @@ import CustomModal from "../../atoms/CustomModal/CustomModal";
 import Stepper from "../../atoms/Stepper/Stepper";
 import IconBlock from "../../atoms/IconBlock/IconBlock";
 import { router } from "expo-router";
+import ToggleButton from "../../atoms/ToggleButton/ToggleButton";
 
 const ProductManager = () => {
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -394,12 +395,12 @@ const ProductManager = () => {
             customContent={
               <IconBlock
                 icon={{
-                  serviceType: "Feather",
-                  iconName: "upload",
+                  serviceType: "MaterialIcons",
+                  iconName: "local-offer",
                   size: 16,
                   color: "#000000",
                   noBorder: true,
-                  label: "Bulk Upload",
+                  label: "Create Offer",
                   // reverseLabel: true,
                   textStyle: {
                     fontSize: 16,
@@ -414,6 +415,9 @@ const ProductManager = () => {
             borderRadius={8}
             borderColor="#D1D5DB"
             mode={"outlined"}
+            onPress={() => {
+              router.push("(productmanager)/offeradditon");
+            }}
           />
           <Button
             customContent={
@@ -568,6 +572,20 @@ const ProductManager = () => {
           </View>
         </View>
       </View>
+      <ToggleButton
+        options={["products", "offers"]}
+        onToggle={(answer) => console.log(answer)}
+        style={{
+          width: "20%",
+          alignSelf: "flex-start",
+          borderRadius: 25,
+          marginVertical: 10,
+        }}
+        textStyle={{
+          fontSize: 12,
+          fontFamily: "Arial",
+        }}
+      />
       <GenericTable
         columns={columns}
         data={data}

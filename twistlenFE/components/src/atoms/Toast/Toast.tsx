@@ -78,13 +78,13 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 10,
   },
   subtext: {
-    fontSize: 14,
+    fontSize: 8,
   },
   closeButton: {
-    marginLeft: 12,
+    marginLeft: 8,
     padding: 4,
   },
   closeText: {
