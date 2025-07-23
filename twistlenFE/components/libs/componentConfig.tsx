@@ -9,6 +9,8 @@ import ProductListPage from "../src/organisms/ProductListPage/ProductListPage";
 import ProductDetails from "../src/organisms/ProductDetails/ProductDetails";
 import ProfilePage from "../src/organisms/ProfilePage/ProfilePage";
 import Checkout from "../src/organisms/CheckOut/CheckOut";
+import QueryDetails from "../src/organisms/QueryDetails/QueryDetails";
+import HomePage from "../src/organisms/HomePage/HomePage";
 
 // Component Configurations
 export const componentConfig = {
@@ -74,6 +76,7 @@ export const componentConfig = {
   ProductDetails: [{ key: "title", defaultValue: "" }],
   ProfilePage: [{ key: "title", defaultValue: "" }],
   Checkout: [{ key: "title", defaultValue: "" }],
+  HomePage: [{ key: "title", defaultValue: "" }],
   Header: [
     { key: "logo", defaultValue: "" },
     { key: "navItems", defaultValue: [] },
@@ -89,6 +92,7 @@ export const componentConfig = {
     { key: "subscribeText", defaultValue: "" },
     { key: "copyrightText", defaultValue: "" },
   ],
+  QueryDetails: [{ key: "title", defaultValue: "" }],
 };
 
 // Component Mapping
@@ -103,4 +107,6 @@ export const componentMapping = {
   Checkout: Checkout,
   Header: Header,
   Footer: Footer,
+  QueryDetails: QueryDetails,
+  HomePage: HomePage,
 };

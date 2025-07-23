@@ -22,7 +22,7 @@ import { rootUrl } from "@/constants/endPoints";
 import { useEffect } from "react";
 import { componentMap } from "@/app/import-components";
 
-const HomeScreen = () => {
+const QueryScreen = () => {
   const { setIsLoading, isLoading, setPages, pages } = usePageStore();
   const segments = useSegments();
   const { productId, ref, refv1 } = useLocalSearchParams();
@@ -48,7 +48,7 @@ const HomeScreen = () => {
       <View style={styles.container}>
         {/* <Text>Hi This is AuthScreen</Text> */}
         {pages
-          ?.find((page) => page.name === segments.join('/'))
+          ?.find((page) => /^\(query\)\/querydetails\/[^/]+$/.test(page.name))
           ?.objects?.sort((a, b) => a.position.y - b.position.y)
           ?.map((obj, index, arr) => {
             const Component = componentMap[obj.type];
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default QueryScreen;

@@ -8,6 +8,8 @@ import ProductListPage from "@/components/src/organisms/ProductListPage/ProductL
 import ProductDetails from "@/components/src/organisms/ProductDetails/ProductDetails";
 import ProfilePage from "@/components/src/organisms/ProfilePage/ProfilePage";
 import Checkout from "@/components/src/organisms/CheckOut/CheckOut";
+import QueryDetails from "@/components/src/organisms/QueryDetails/QueryDetails";
+import HomePage from "@/components/src/organisms/HomePage/HomePage";
 
 export const components = [
   {
@@ -49,6 +51,14 @@ export const components = [
   {
     name: "Footer",
     component: Footer,
+  },
+  {
+    name: "QueryDetails",
+    component: QueryDetails,
+  },
+  {
+    name: "HomePage",
+    component: HomePage,
   },
 ];
 

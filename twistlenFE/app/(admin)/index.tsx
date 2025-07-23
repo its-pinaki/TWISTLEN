@@ -2,7 +2,7 @@ import { usePageStore } from "@/stores/pageStores";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { rootUrl } from "@/constants/endPoints";
 import Admin from "@/adminconfig/Admin";
 import SidebarNavigation from "@/components/src/atoms/SideBarNavigation/SideBarNavigation";
@@ -57,11 +57,20 @@ export default function AdminScreen() {
   ];
 
   return (
-    <View style={styles.container}>
+    <>
       <Header />
-      <SidebarNavigation tabs={tabs} />
+      <ScrollView
+        style={{
+          flex: 1,
+          padding: 16,
+        }}
+      >
+        <View style={{ $$css: true, _: "w-full max-w-[1024px] mx-auto px-4" }}>
+          <SidebarNavigation tabs={tabs} />
+        </View>
+      </ScrollView>
       <Footer />
-    </View>
+    </>
   );
 }
 
